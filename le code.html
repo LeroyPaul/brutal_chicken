@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" /><title>The Legend of Canard : a Canard to the Past</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.51.0/dist/phaser.js">
+    </script>
+
+    <style type="text/css"> body 
+    
+        { margin: 0; 
+        }
+
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+
+class sceneVariables extends Phaser.Scene{
+constructor(){
+super("scene variables");
+}
+preload(){
+    this.load.image("phaser_background", "assets/essai.png");
+
+    this.load.tilemapTiledJSON("carte", "map.json");
+    
+    
+    this.load.image("poule", "assets/poule.png");
+}
+create(){
+// importer Tiled
+const carteDuNiveau = this.add.tilemap("carte");
+
+
+// importer TileSet 
+    const tileset = carteDuNiveau.addTilesetImage(
+        "pahser_background",
+        "essai",
+    );
+// importez les layers 1 apr 1 dans l'ordre d'apparition
+    const layer1 = carteDuNiveau.createStaticLayer(
+                    "Calque1",
+                    tileset,
+                    );
+
+                    this.poule = this.physics.add.sprite(400,200,"poule");
+
+this.cameras.main.zoom = 2;
+this.physics.world.setBounds(0, 0, 16*100, 16*100);
+}
+
+
+update(){
+}
+
+};
+
+var config = {
+        type: Phaser.AUTO,
+        width: 960, height: 540,
+        physics: {
+        default: 'arcade',
+        arcade: {
+        debug: false,
+        }},
+        pixelArt: true,
+        roundPixel: true,
+        scene: [sceneVariables]
+        };
+        new Phaser.Game(config);
+
+
+</script>
+</body>
+</html>
