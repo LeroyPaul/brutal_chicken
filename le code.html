@@ -15,45 +15,102 @@
 <body>
     <script type="text/javascript">
 
-class sceneVariables extends Phaser.Scene{
-constructor(){
-super("scene variables");
+class scene1 extends Phaser.Scene{
+    constructor(){
+    super("scene1");
 }
+
+
+
 preload(){
-    this.load.image("phaser_background", "assets/essai.png");
+    this.load.image("Phaser_tuilesdejeu", "assets/essai.png");
 
-    this.load.tilemapTiledJSON("carte", "map.json");
-    
-    
-    this.load.image("poule", "assets/poule.png");
+    this.load.tilemapTiledJSON("carte", "essaiTiled.json");  
+
+    this.load.spritesheet('perso','assets/poule.png',
+    { frameWidth: 32, frameHeight: 32 });
 }
+
 create(){
-// importer Tiled
-const carteDuNiveau = this.add.tilemap("carte");
+    const carte = this.make.tilemap({ key: 'carte' });
+    // importer les TileSet 
+    const tileset = carte.addTilesetImage(
+            "tuileTest",
+            "Phaser_tuilesdejeu"
+            );  
+
+    const plateforme = carte.createLayer(
+            "plateforme",
+            tileset
+            );
+
+            this.speed = 300
+
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
+    carte.getObjectLayer('spawnJoueur').objects.forEach((spawnJoueur) => {
+        this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y, 'perso').setOrigin(0);
+
+        });
+
+    this.player.body.setSize(24,6,true)
+    this.player.setOffset(4, 26)
+    
+    this.physics.add.collider(this.player, plateforme);
+    plateforme.setCollisionByProperty({ estSolide: true });
+
+    this.player.setCollideWorldBounds(true);
+
+    this.cameras.main.zoom = 3
+    this.cameras.main.startFollow(this.player); 
+    this.physics.world.setBounds(0, 0, 6400, 2880);
+    this.cameras.main.setBounds(0, 0, 6400, 2880);
 
 
-// importer TileSet 
-    const tileset = carteDuNiveau.addTilesetImage(
-        "pahser_background",
-        "essai",
-    );
-// importez les layers 1 apr 1 dans l'ordre d'apparition
-    const layer1 = carteDuNiveau.createStaticLayer(
-                    "Calque1",
-                    tileset,
-                    );
 
-                    this.poule = this.physics.add.sprite(400,200,"poule");
+    ///////////////////////////////////////////////////////////////
+    /////////////////////////TOUCHES///////////////////////////////
+    ///////////////////////////////////////////////////////////////
 
-this.cameras.main.zoom = 2;
-this.physics.world.setBounds(0, 0, 16*100, 16*100);
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.keys = this.input.keyboard.addKeys({
+    });
+
+    // touches spéciales clavier + manettes
+    this.toucheF = this.input.keyboard.addKey('F') ||this.paddle.A;
 }
-
 
 update(){
+
+
+        this.moveUp = (this.cursors.up.isDown )  
+        this.moveLeft = (this.cursors.left.isDown )  
+        this.moveRight = (this.cursors.right.isDown ) 
+        this.moveDown = ( this.cursors.down.isDown) 
+    
+
+    
+        if (this.moveUp && this.player.body.blocked.down ) {
+            this.player.setVelocityY(-this.speed);
+        }  
+        if (this.moveLeft){ 
+            this.player.direction = 'left';
+            this.player.setVelocityX(-this.speed); 
+        }
+        else if (this.moveRight){ 
+            this.player.direction = 'right';
+            this.player.setVelocityX(this.speed);
+        }
+        else{ 
+            this.player.setVelocityX(0); 
+        }
+            
+    }
+
 }
 
-};
 
 var config = {
         type: Phaser.AUTO,
@@ -61,11 +118,12 @@ var config = {
         physics: {
         default: 'arcade',
         arcade: {
-        debug: false,
+        gravity: {y:1000},
+        debug: true,
         }},
         pixelArt: true,
         roundPixel: true,
-        scene: [sceneVariables]
+        scene: [scene1]
         };
         new Phaser.Game(config);
 
