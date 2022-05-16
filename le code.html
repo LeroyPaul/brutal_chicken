@@ -44,7 +44,7 @@ create(){
             tileset
             );
 
-            this.speed = 300
+            this.velocity = 0
 
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
@@ -55,15 +55,15 @@ create(){
 
         });
 
-    this.player.body.setSize(24,6,true)
-    this.player.setOffset(4, 26)
+    this.player.body.setSize(16,20,true)
+    this.player.setOffset(6, 12)
     
     this.physics.add.collider(this.player, plateforme);
     plateforme.setCollisionByProperty({ estSolide: true });
 
     this.player.setCollideWorldBounds(true);
 
-    this.cameras.main.zoom = 3
+    this.cameras.main.zoom = 2
     this.cameras.main.startFollow(this.player); 
     this.physics.world.setBounds(0, 0, 6400, 2880);
     this.cameras.main.setBounds(0, 0, 6400, 2880);
@@ -91,24 +91,66 @@ update(){
         this.moveDown = ( this.cursors.down.isDown) 
     
 
-    
+        //SAUT
         if (this.moveUp && this.player.body.blocked.down ) {
-            this.player.setVelocityY(-this.speed);
-        }  
+            this.player.setVelocityY(-420);}
+
+        if (this.moveUp && this.player.body.blocked.left ) {
+            this.player.setVelocityX(this.velocity);
+            this.player.setVelocityY(-420);}
+        //DEPLACEMENT HORIZONTAL
         if (this.moveLeft){ 
             this.player.direction = 'left';
-            this.player.setVelocityX(-this.speed); 
+            this.player.setVelocityX(this.velocity); 
+            if (this.velocity > -200){
+                this.velocity -= 20;}
         }
         else if (this.moveRight){ 
             this.player.direction = 'right';
-            this.player.setVelocityX(this.speed);
-        }
-        else{ 
-            this.player.setVelocityX(0); 
-        }
-            
-    }
+            this.player.setVelocityX(this.velocity);
 
+                if (this.velocity <200){
+                this.velocity += 20;}
+        }
+
+        //RALENTISSEMENT SUR LE SOL
+        else{ 
+            this.player.setVelocityX(this.velocity);
+            if (this.player.body.blocked.down ) {
+                if (this.velocity > 0){
+                    this.velocity -=  30;
+                    if (this.velocity < 30){
+                        this. velocity = 0}}
+                if (this.velocity < 0){
+                    this.velocity +=  30;
+                    if (this.velocity > 30){
+                        this. velocity = 0}}
+            }
+            
+        //RALENTISSEMENT DANS L'AIR
+            else {
+                if (this.velocity > 0){
+                    this.velocity -=  10;
+                    if (this.velocity < 10){
+                        this. velocity = 0}}
+                if (this.velocity < 0){
+                    this.velocity +=  10;
+                    if (this.velocity > 10){
+                        this. velocity = 0}}
+            }
+        }
+
+        //RALENTISSEMENT CONTRE LES MURS
+        if (this.player.body.blocked.right ) {
+            this.player.setVelocityX(this.velocity);
+            this.velocity = 0;}
+        if (this.player.body.blocked.left ) {
+            this.player.setVelocityX(this.velocity);
+            this.velocity = 0;}
+               
+
+            
+    }   
 }
 
 
@@ -119,7 +161,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: true,
+        debug: false,
         }},
         pixelArt: true,
         roundPixel: true,
