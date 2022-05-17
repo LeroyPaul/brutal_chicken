@@ -67,7 +67,9 @@ create(){
     this.cameras.main.startFollow(this.player); 
     this.physics.world.setBounds(0, 0, 6400, 2880);
     this.cameras.main.setBounds(0, 0, 6400, 2880);
-
+    
+    this.timer = 0
+    this.saut = 0
 
 
     ///////////////////////////////////////////////////////////////
@@ -89,15 +91,40 @@ update(){
         this.moveLeft = (this.cursors.left.isDown )  
         this.moveRight = (this.cursors.right.isDown ) 
         this.moveDown = ( this.cursors.down.isDown) 
+
     
 
         //SAUT
         if (this.moveUp && this.player.body.blocked.down ) {
             this.player.setVelocityY(-420);}
 
-        if (this.moveUp && this.player.body.blocked.left ) {
+        //WALL JUMP    
+        if (this.moveUp && this.player.body.blocked.left && this.moveLeft ) {
+            this.wallJumpGauche = true}
+
+        if (this.wallJumpGauche == true){
             this.player.setVelocityX(this.velocity);
-            this.player.setVelocityY(-420);}
+            this.velocity = 240
+            this.player.setVelocityY(-220);
+            this.timer += 1
+            if (this.timer == 10){
+            this.wallJumpGauche = false
+            this.timer = 0}}
+
+        if (this.moveUp && this.player.body.blocked.right && this.moveRight ) {
+            this.wallJumpDroite = true}
+
+        if (this.wallJumpDroite == true){
+            this.player.setVelocityX(this.velocity);
+            this.velocity = -240
+            this.player.setVelocityY(-220);
+            this.timer += 1
+            if (this.timer == 10){
+            this.wallJumpDroite = false
+            this.timer = 0}}
+
+        
+
         //DEPLACEMENT HORIZONTAL
         if (this.moveLeft){ 
             this.player.direction = 'left';
@@ -143,10 +170,18 @@ update(){
         //RALENTISSEMENT CONTRE LES MURS
         if (this.player.body.blocked.right ) {
             this.player.setVelocityX(this.velocity);
-            this.velocity = 0;}
+            this.velocity = 0;
+            if ( this.player.velocity([Y])<50){
+
+            }
+        }
+
         if (this.player.body.blocked.left ) {
+            this.player.setVelocityY(50)
             this.player.setVelocityX(this.velocity);
             this.velocity = 0;}
+
+
                
 
             
@@ -161,7 +196,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         roundPixel: true,
