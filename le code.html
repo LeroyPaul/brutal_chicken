@@ -52,7 +52,6 @@ create(){
 
     carte.getObjectLayer('spawnJoueur').objects.forEach((spawnJoueur) => {
         this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y, 'perso').setOrigin(0);
-
         });
 
     this.player.body.setSize(16,20,true)
@@ -63,6 +62,8 @@ create(){
 
     this.player.setCollideWorldBounds(true);
 
+    this.player.setCollideWorldBounds(true);
+
     this.cameras.main.zoom = 2
     this.cameras.main.startFollow(this.player); 
     this.physics.world.setBounds(0, 0, 6400, 2880);
@@ -70,6 +71,14 @@ create(){
     
     this.timer = 0
     this.saut = 0
+    this.player.direction = "right"
+
+    this.OeufG=this.physics.add.group({
+        allowGravity: true,
+    })
+
+    this.physics.add.collider(this.OeufG, plateforme);
+    plateforme.setCollisionByProperty({ estSolide: true });
 
 
     ///////////////////////////////////////////////////////////////
@@ -96,6 +105,7 @@ update(time,delta){
         this.justeUp = (this.cursors.up.isDown ) 
         this.moveUp = Phaser.Input.Keyboard.JustDown(this.keys.espace)
         this.plane = this.keys.espace.isDown
+        this.tirer = Phaser.Input.Keyboard.JustDown(this.keys.b)
         this.moveLeft = (this.cursors.left.isDown )  
         this.moveRight = (this.cursors.right.isDown ) 
         this.moveDown = ( this.cursors.down.isDown) 
@@ -113,11 +123,24 @@ update(time,delta){
         if (this.moveUp && this.player.body.blocked.down ) {
             this.player.setVelocityY(-420);}
 
-            if (this.plane){
-                if (this.player.body.velocity.y > 0){
-                this.player.setVelocityY(80)
-                }
+
+        //PLANER
+        if (this.plane){
+            if (this.player.body.velocity.y > 0){
+            this.player.setVelocityY(80)
             }
+        }
+
+
+        //OEUF
+        if (this.tirer){
+            this.oeuf = this.OeufG.create(this.player.x, this.player.y, 'perso');
+            this.oeuf.setVelocityY(-420)
+            if (this.player.direction == "right")
+            this.oeuf.setVelocityX(this.velocity + 200)
+            if (this.player.direction == "left")
+            this.oeuf.setVelocityX(this.velocity + -200)
+        }
 
         //WALL JUMP    
         if (this.moveUp && this.player.body.blocked.left && this.moveLeft && this.saut > 0) {
@@ -151,14 +174,14 @@ update(time,delta){
             this.player.direction = 'left';
             this.player.setVelocityX(this.velocity); 
             if (this.velocity > -200){
-                this.velocity -= 20;}
+                this.velocity -= 15;}
         }
         else if (this.moveRight){ 
             this.player.direction = 'right';
             this.player.setVelocityX(this.velocity);
 
                 if (this.velocity <200){
-                this.velocity += 20;}
+                this.velocity += 15;}
         }
 
         //RALENTISSEMENT SUR LE SOL
@@ -220,7 +243,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: true,
+        debug: false,
         }},
         pixelArt: true,
         fps: {
