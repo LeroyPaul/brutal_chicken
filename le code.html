@@ -78,7 +78,9 @@ create(){
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keys = this.input.keyboard.addKeys({
-        espace:  Phaser.Input.Keyboard.KeyCodes.SPACE
+        espace:  Phaser.Input.Keyboard.KeyCodes.SPACE,
+        b: Phaser.Input.Keyboard.KeyCodes.B,
+
     });
 
     // touches spéciales clavier + manettes
@@ -91,21 +93,34 @@ update(time,delta){
     super.update(time,delta);
 
 
-        this.justeUp = (this.cursors.up.justDown ) 
+        this.justeUp = (this.cursors.up.isDown ) 
         this.moveUp = Phaser.Input.Keyboard.JustDown(this.keys.espace)
+        this.plane = this.keys.espace.isDown
         this.moveLeft = (this.cursors.left.isDown )  
         this.moveRight = (this.cursors.right.isDown ) 
         this.moveDown = ( this.cursors.down.isDown) 
         Phaser.Input.Keyboard.JustDown(this.keys.espace)
 
-    
+        if (this.player.body.blocked.down ) {
+            this.saut = 0
+        }
 
         //SAUT
+        if(this.moveUp){
+            this.saut += 1;
+        }
+
         if (this.moveUp && this.player.body.blocked.down ) {
             this.player.setVelocityY(-420);}
 
+            if (this.plane){
+                if (this.player.body.velocity.y > 0){
+                this.player.setVelocityY(80)
+                }
+            }
+
         //WALL JUMP    
-        if (this.moveUp && this.player.body.blocked.left && this.moveLeft ) {
+        if (this.moveUp && this.player.body.blocked.left && this.moveLeft && this.saut > 0) {
             this.wallJumpGauche = true}
 
         if (this.wallJumpGauche == true){
