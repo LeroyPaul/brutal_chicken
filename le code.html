@@ -15,7 +15,7 @@
 <body>
     <script type="text/javascript">
 
-class scene1 extends Phaser.Scene{b
+class scene1 extends Phaser.Scene{
     constructor(){
     super("scene1");
 }
@@ -132,7 +132,7 @@ update(time,delta){
 
         //OEUF
         if (this.tirer){
-            this.oeuf = this.oeufG.create(this.player.x, this.player.y, 'perso');
+            this.oeuf = this.oeufG.create(this.player.x + 16, this.player.y, 'perso');
             this.oeuf.setVelocityY(-420)
             if (this.player.direction == "right")
             this.oeuf.setVelocityX(this.velocity + 200)
@@ -215,6 +215,7 @@ update(time,delta){
             this.velocity = 0;
             if ( this.player.body.velocity.y>50){
                 this.player.setVelocityY(50)
+                this.player.direction = "left"
             }
         }
 
@@ -223,6 +224,7 @@ update(time,delta){
             this.velocity = 0;
             if ( this.player.body.velocity.y>50){
                 this.player.setVelocityY(50)
+                this.player.direction = "right"
             }
         }
      
