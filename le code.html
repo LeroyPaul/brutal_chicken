@@ -27,8 +27,7 @@ preload(){
 
     this.load.tilemapTiledJSON("carte", "essaiTiled.json");  
 
-    this.load.spritesheet('perso','assets/poule.png',
-    { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('perso','assets/idle poule.png',{ frameWidth: 22, frameHeight: 34 });
 }
 
 create(){
@@ -61,6 +60,15 @@ create(){
     plateforme.setCollisionByProperty({ estSolide: true });
 
     this.player.setCollideWorldBounds(true);
+
+
+    this.anims.create({
+                key: 'animIdle',
+                frames: this.anims.generateFrameNumbers('perso', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
+
 
 
     this.cameras.main.zoom = 2
@@ -141,7 +149,7 @@ update(time,delta){
         }
 
         //WALL JUMP    
-        if (this.moveUp && this.player.body.blocked.left && this.moveLeft && this.saut > 0) {
+        if (this.moveUp && this.player.body.blocked.left && this.moveLeft) {
             this.wallJumpGauche = true}
 
         if (this.wallJumpGauche == true){
@@ -244,7 +252,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         fps: {
