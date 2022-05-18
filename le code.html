@@ -78,19 +78,25 @@ create(){
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keys = this.input.keyboard.addKeys({
+        espace:  Phaser.Input.Keyboard.KeyCodes.SPACE
     });
 
     // touches spéciales clavier + manettes
     this.toucheF = this.input.keyboard.addKey('F') ||this.paddle.A;
+    
 }
 
-update(){
+update(time,delta){
+
+    super.update(time,delta);
 
 
-        this.moveUp = (this.cursors.up.isDown )  
+        this.justeUp = (this.cursors.up.justDown ) 
+        this.moveUp = Phaser.Input.Keyboard.JustDown(this.keys.espace)
         this.moveLeft = (this.cursors.left.isDown )  
         this.moveRight = (this.cursors.right.isDown ) 
         this.moveDown = ( this.cursors.down.isDown) 
+        Phaser.Input.Keyboard.JustDown(this.keys.espace)
 
     
 
@@ -171,15 +177,18 @@ update(){
         if (this.player.body.blocked.right ) {
             this.player.setVelocityX(this.velocity);
             this.velocity = 0;
-            if ( this.player.velocity([Y])<50){
-
+            if ( this.player.body.velocity.y>50){
+                this.player.setVelocityY(50)
             }
         }
 
         if (this.player.body.blocked.left ) {
-            this.player.setVelocityY(50)
             this.player.setVelocityX(this.velocity);
-            this.velocity = 0;}
+            this.velocity = 0;
+            if ( this.player.body.velocity.y>50){
+                this.player.setVelocityY(50)
+            }
+        }
 
 
                
@@ -199,6 +208,10 @@ var config = {
         debug: true,
         }},
         pixelArt: true,
+        fps: {
+            target: 60,                    //bloc fps car update frame rate est selon frame rate du pc et donc changement des timings ( vitesse deplacement/tombe etc...)
+            forceSetTimeOut: true
+            },
         roundPixel: true,
         scene: [scene1]
         };
