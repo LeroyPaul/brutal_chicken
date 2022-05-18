@@ -15,7 +15,7 @@
 <body>
     <script type="text/javascript">
 
-class scene1 extends Phaser.Scene{
+class scene1 extends Phaser.Scene{b
     constructor(){
     super("scene1");
 }
@@ -62,7 +62,6 @@ create(){
 
     this.player.setCollideWorldBounds(true);
 
-    this.player.setCollideWorldBounds(true);
 
     this.cameras.main.zoom = 2
     this.cameras.main.startFollow(this.player); 
@@ -73,12 +72,11 @@ create(){
     this.saut = 0
     this.player.direction = "right"
 
-    this.OeufG=this.physics.add.group({
-        allowGravity: true,
-    })
+    this.oeufG = this.physics.add.group()
 
-    this.physics.add.collider(this.OeufG, plateforme);
-    plateforme.setCollisionByProperty({ estSolide: true });
+    
+
+    this.physics.add.collider( this.oeufG,plateforme, this.destroyOeuf, null,this);
 
 
     ///////////////////////////////////////////////////////////////
@@ -134,7 +132,7 @@ update(time,delta){
 
         //OEUF
         if (this.tirer){
-            this.oeuf = this.OeufG.create(this.player.x, this.player.y, 'perso');
+            this.oeuf = this.oeufG.create(this.player.x, this.player.y, 'perso');
             this.oeuf.setVelocityY(-420)
             if (this.player.direction == "right")
             this.oeuf.setVelocityX(this.velocity + 200)
@@ -227,13 +225,14 @@ update(time,delta){
                 this.player.setVelocityY(50)
             }
         }
-
-
-               
-
-            
+     
+    }
+    destroyOeuf (oeuf,plateforme){
+        oeuf.destroy();
     }   
-}
+};
+
+
 
 
 var config = {
