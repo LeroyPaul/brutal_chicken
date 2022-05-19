@@ -92,25 +92,25 @@ create(){
             });
             this.anims.create({
                 key: 'animBaisseGauche',
-                frames: this.anims.generateFrameNumbers('anim baisse', {start:0,end:2}),
-                frameRate: 8,
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:3,end:7}),
+                frameRate: 2,
                 repeat: -1
             });
             this.anims.create({
                 key: 'animBaisseContinuerGauche',
-                frames: this.anims.generateFrameNumbers('anim baisse', {start:3,end:4}),
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:2,end:3}),
                 frameRate: 8,
                 repeat: -1
             });
             this.anims.create({
                 key: 'animBaisseDroite',
-                frames: this.anims.generateFrameNumbers('anim baisse', {start:5,end:7}),
-                frameRate: 8,
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:5,end:6}),
+                frameRate: 2,
                 repeat: -1
             });
             this.anims.create({
                 key: 'animBaisseContinuerDroite',
-                frames: this.anims.generateFrameNumbers('anim baisse', {start:7,end:8}),
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:6,end:7}),
                 frameRate: 8,
                 repeat: -1
             });
@@ -189,10 +189,10 @@ update(time,delta){
         if (this.tirer){
             this.oeuf = this.oeufG.create(this.player.x + 16, this.player.y, 'perso');
             this.oeuf.setVelocityY(-420)
-            if (this.player.direction == "right")
-            this.oeuf.setVelocityX(this.velocity + 200)
-            if (this.player.direction == "left")
-            this.oeuf.setVelocityX(this.velocity + -200)
+            if (this.player.direction == "right"){
+            this.oeuf.setVelocityX(this.velocity + 200)}
+            if (this.player.direction == "left"){
+            this.oeuf.setVelocityX(this.velocity + -200)}
         }
 
         //WALL JUMP    
@@ -286,30 +286,32 @@ update(time,delta){
             (this.player.body.velocity.y)+=50;
         }
         
-        if (this.moveDown && this.player.body.blocked.down){
-            this.baisse = true
-        }
 
         
 
-        if (this.baisse == true){
-            if(this.player.body.direction = "left"){
-            this.player.anims.play('animBaisseGauche', true)
-            this.player.body.setSize(18,10,true)
-            this.player.setOffset(2, 25)}
-            if(this.player.body.direction = "right"){
-            this.player.anims.play('animBaisseDroite', true)
-            this.player.body.setSize(18,10,true)
-            this.player.setOffset(2, 25)}
-            if(this.player.anims.currentFrame.index == 3){
+        if (this.moveDown && this.player.body.blocked.down){
+            if(this.player.direction == "left"){
+                this.player.anims.play('animBaisseGauche', true)
+                this.player.body.setSize(18,10,true)
+                this.player.setOffset(2, 25)}
+            if(this.player.direction == "right"){
+                this.player.anims.play('animBaisseDroite', true)
+                this.player.body.setSize(18,10,true)
+                this.player.setOffset(2, 25)}
+            if(this.player.anims.currentFrame.index == 3 || this.player.anims.currentFrame.index == 7){
                 this.baisse2 = true
             }
 
         }
 
         if (this.baisse2 == true){
-            this.player.anims.play('animBaisseContinuerGauche', true)
+            if(this.player.direction == "left"){
+                this.player.anims.play('animBaisseContinuerGauche', true)
         }
+            if(this.player.direction == "right"){
+                this.player.anims.play('animBaisseContinuerDroite', true)
+        }
+    }
         
 
         //RALENTISSEMENT CONTRE LES MURS
