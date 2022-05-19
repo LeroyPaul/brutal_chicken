@@ -23,11 +23,14 @@ class scene1 extends Phaser.Scene{
 
 
 preload(){
+    this.load.spritesheet('anim marche','assets/frame anim.png',{ frameWidth: 22, frameHeight: 36 });
+    this.load.spritesheet('anim baisse','assets/baisser poule.png',{ frameWidth: 22, frameHeight: 36 });
     this.load.image("Phaser_tuilesdejeu", "assets/essai.png");
 
     this.load.tilemapTiledJSON("carte", "essaiTiled.json");  
 
-    this.load.spritesheet('perso','assets/idle poule.png',{ frameWidth: 22, frameHeight: 34 });
+    this.load.spritesheet('perso','assets/idle poule.png',{ frameWidth: 22, frameHeight: 36 });
+
 }
 
 create(){
@@ -53,8 +56,8 @@ create(){
         this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y, 'perso').setOrigin(0);
         });
 
-    this.player.body.setSize(16,20,true)
-    this.player.setOffset(6, 12)
+    this.player.body.setSize(16,30,true)
+    this.player.setOffset(2, 4)
     
     this.physics.add.collider(this.player, plateforme);
     plateforme.setCollisionByProperty({ estSolide: true });
@@ -63,12 +66,54 @@ create(){
 
 
     this.anims.create({
-                key: 'animIdle',
+                key: 'animIdleGauche',
                 frames: this.anims.generateFrameNumbers('perso', {start:0,end:5}),
                 frameRate: 8,
                 repeat: -1
             });
+            this.anims.create({
+                key: 'animIdleDroite',
+                frames: this.anims.generateFrameNumbers('perso', {start:6,end:11}),
+                frameRate: 8,
+                repeat: -1
+            });
 
+    this.anims.create({
+                key: 'animMarcheGauche',
+                frames: this.anims.generateFrameNumbers('anim marche', {start:0,end:9}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animMarcheDroite',
+                frames: this.anims.generateFrameNumbers('anim marche', {start:10,end:19}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animBaisseGauche',
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:0,end:2}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animBaisseContinuerGauche',
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:3,end:4}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animBaisseDroite',
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:5,end:7}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animBaisseContinuerDroite',
+                frames: this.anims.generateFrameNumbers('anim baisse', {start:7,end:8}),
+                frameRate: 8,
+                repeat: -1
+            });
 
 
     this.cameras.main.zoom = 2
@@ -79,6 +124,7 @@ create(){
     this.timer = 0
     this.saut = 0
     this.player.direction = "right"
+    this.baisse = false;
 
     this.oeufG = this.physics.add.group()
 
@@ -115,6 +161,7 @@ update(time,delta){
         this.moveLeft = (this.cursors.left.isDown )  
         this.moveRight = (this.cursors.right.isDown ) 
         this.moveDown = ( this.cursors.down.isDown) 
+        if ( this.cursors.down.isUp) {this.baisse = false ;this.baisse2 = false}
         Phaser.Input.Keyboard.JustDown(this.keys.espace)
 
         if (this.player.body.blocked.down ) {
@@ -178,17 +225,24 @@ update(time,delta){
         //DEPLACEMENT HORIZONTAL
         if (this.moveLeft){ 
             this.player.direction = 'left';
+            this.player.anims.play('animMarcheGauche', true)
+            this.player.body.setSize(16,30,true)
+            this.player.setOffset(2, 6)
             this.player.setVelocityX(this.velocity); 
             if (this.velocity > -200){
                 this.velocity -= 15;}
         }
         else if (this.moveRight){ 
             this.player.direction = 'right';
+            this.player.anims.play('animMarcheDroite', true)
+            this.player.body.setSize(16,30,true)
+            this.player.setOffset(4, 6)
             this.player.setVelocityX(this.velocity);
-
                 if (this.velocity <200){
                 this.velocity += 15;}
         }
+
+
 
         //RALENTISSEMENT SUR LE SOL
         else{ 
@@ -202,6 +256,18 @@ update(time,delta){
                     this.velocity +=  30;
                     if (this.velocity > 30){
                         this. velocity = 0}}
+                        if (this.velocity == 0 && this.baisse == false){
+                            if (this.player.direction == "left"){
+                            this.player.anims.play('animIdleGauche', true)
+                            this.player.body.setSize(16,30,true)
+                            this.player.setOffset(2, 6)
+                            }
+                            if (this.player.direction == "right"){
+                            this.player.anims.play('animIdleDroite', true)
+                            this.player.body.setSize(16,30,true)
+                            this.player.setOffset(4, 6)
+                            }
+                        }
             }
             
         //RALENTISSEMENT DANS L'AIR
@@ -213,9 +279,38 @@ update(time,delta){
                 if (this.velocity < 0){
                     this.velocity +=  10;
                     if (this.velocity > 10){
-                        this. velocity = 0}}
+                        this.velocity = 0}}
             }
         }
+        if (this.moveDown && this.player.body.velocity.y<500  ){
+            (this.player.body.velocity.y)+=50;
+        }
+        
+        if (this.moveDown && this.player.body.blocked.down){
+            this.baisse = true
+        }
+
+        
+
+        if (this.baisse == true){
+            if(this.player.body.direction = "left"){
+            this.player.anims.play('animBaisseGauche', true)
+            this.player.body.setSize(18,10,true)
+            this.player.setOffset(2, 25)}
+            if(this.player.body.direction = "right"){
+            this.player.anims.play('animBaisseDroite', true)
+            this.player.body.setSize(18,10,true)
+            this.player.setOffset(2, 25)}
+            if(this.player.anims.currentFrame.index == 3){
+                this.baisse2 = true
+            }
+
+        }
+
+        if (this.baisse2 == true){
+            this.player.anims.play('animBaisseContinuerGauche', true)
+        }
+        
 
         //RALENTISSEMENT CONTRE LES MURS
         if (this.player.body.blocked.right ) {
