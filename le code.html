@@ -137,8 +137,14 @@ create(){
                 repeat: -1
             });
             this.anims.create({
-                key: 'animDescendreMur',
+                key: 'animdescendreMurDroite',
                 frames: this.anims.generateFrameNumbers('anim descendre', {start:0,end:3}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animdescendreMurGauche',
+                frames: this.anims.generateFrameNumbers('anim descendre', {start:4,end:7}),
                 frameRate: 8,
                 repeat: -1
             });
@@ -229,9 +235,14 @@ update(time,delta){
             }
         }
         else {//descendre contre le mur
-            this.player.anims.play('animDescendreMur', true)
-            this.player.body.setSize(15,25,true)
-                this.player.setOffset(1, 11)
+            if(this.player.direction == "left")
+            this.player.anims.play('animdescendreMurDroite', true)
+            this.player.body.setSize(15,30,true)
+                this.player.setOffset(1, 6)
+                if(this.player.direction == "right")
+            this.player.anims.play('animdescendreMurGauche', true)
+            this.player.body.setSize(15,30,true)
+                this.player.setOffset(1, 6)
         }
 
 
@@ -293,7 +304,6 @@ update(time,delta){
                 if (this.velocity <200){
                 this.velocity += 15;}
         }
-
 
 
         //RALENTISSEMENT SUR LE SOL ET IDLE
