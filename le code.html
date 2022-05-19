@@ -33,6 +33,7 @@ preload(){
 
     this.load.spritesheet('anim baisser particule','assets/baisser particule.png',{ frameWidth: 71, frameHeight: 36 });
     this.load.spritesheet('anim planer','assets/planer.png',{ frameWidth: 22, frameHeight: 36 });
+    this.load.spritesheet('anim descendre','assets/descendre mur.png',{ frameWidth: 16, frameHeight: 36 });
 
 }
 
@@ -126,9 +127,22 @@ create(){
             this.anims.create({
                 key: 'planerGauche',
                 frames: this.anims.generateFrameNumbers('anim planer', {start:0,end:2}),
+                frameRate: 16,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'planerDroite',
+                frames: this.anims.generateFrameNumbers('anim planer', {start:3,end:5}),
+                frameRate: 16,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animDescendreMur',
+                frames: this.anims.generateFrameNumbers('anim descendre', {start:0,end:3}),
                 frameRate: 8,
                 repeat: -1
             });
+
 
 
     this.cameras.main.zoom = 2
@@ -192,12 +206,32 @@ update(time,delta){
 
 
         //PLANER
-        if (this.plane){
-            if (this.player.body.velocity.y > 0){
-            this.player.setVelocityY(80)
-            this.player.anims.play('PlanerGauche', true)
+        if (!this.player.body.blocked.right && !this.player.body.blocked.left){
+            if (this.plane){//plane
+                    if (this.player.body.velocity.y > 0){
+                    this.player.setVelocityY(80)
+                    if(this.player.direction == "left")
+                        this.player.anims.play('planerGauche', true)
+                        if(this.player.direction == "right")
+                        this.player.anims.play('planerDroite', true)
+                    }
+                }
+            else {//idle dans le ciel
+                if(this.player.direction == "right")
+                this.player.anims.play('animMarcheDroite', true)
+                this.player.body.setSize(16,30,true)
+                this.player.setOffset(2, 6)
 
+                if(this.player.direction == "left")
+                this.player.anims.play('animMarcheGauche', true)
+                this.player.body.setSize(16,30,true)
+                this.player.setOffset(2, 6)
             }
+        }
+        else {//descendre contre le mur
+            this.player.anims.play('animDescendreMur', true)
+            this.player.body.setSize(15,25,true)
+                this.player.setOffset(1, 11)
         }
 
 
@@ -241,18 +275,20 @@ update(time,delta){
         //DEPLACEMENT HORIZONTAL
         if (this.moveLeft){ 
             this.player.direction = 'left';
-            this.player.anims.play('animMarcheGauche', true)
-            this.player.body.setSize(16,30,true)
-            this.player.setOffset(2, 6)
+            if (this.player.body.blocked.down){
+                this.player.anims.play('animMarcheGauche', true)
+                this.player.body.setSize(16,30,true)
+                this.player.setOffset(2, 6)}
             this.player.setVelocityX(this.velocity); 
             if (this.velocity > -200){
                 this.velocity -= 15;}
         }
         else if (this.moveRight){ 
             this.player.direction = 'right';
+            if (this.player.body.blocked.down){
             this.player.anims.play('animMarcheDroite', true)
             this.player.body.setSize(16,30,true)
-            this.player.setOffset(4, 6)
+            this.player.setOffset(4, 6)}
             this.player.setVelocityX(this.velocity);
                 if (this.velocity <200){
                 this.velocity += 15;}
@@ -260,7 +296,7 @@ update(time,delta){
 
 
 
-        //RALENTISSEMENT SUR LE SOL
+        //RALENTISSEMENT SUR LE SOL ET IDLE
         else{ 
             this.player.setVelocityX(this.velocity);
             if (this.player.body.blocked.down ) {
@@ -289,11 +325,11 @@ update(time,delta){
         //RALENTISSEMENT DANS L'AIR
             else {
                 if (this.velocity > 0){
-                    this.velocity -=  10;
+                    this.velocity -=  5;
                     if (this.velocity < 10){
                         this. velocity = 0}}
                 if (this.velocity < 0){
-                    this.velocity +=  10;
+                    this.velocity +=  5;
                     if (this.velocity > 10){
                         this.velocity = 0}}
             }
@@ -346,6 +382,8 @@ update(time,delta){
             if ( this.player.body.velocity.y>50){
                 this.player.setVelocityY(50)
                 this.player.direction = "right"
+                
+                
             }
         }
      
@@ -365,7 +403,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         fps: {
