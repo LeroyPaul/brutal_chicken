@@ -31,6 +31,9 @@ preload(){
 
     this.load.spritesheet('perso','assets/idle poule.png',{ frameWidth: 22, frameHeight: 36 });
 
+    this.load.spritesheet('anim baisser particule','assets/baisser particule.png',{ frameWidth: 71, frameHeight: 36 });
+    this.load.spritesheet('anim planer','assets/planer.png',{ frameWidth: 22, frameHeight: 36 });
+
 }
 
 create(){
@@ -114,6 +117,18 @@ create(){
                 frameRate: 8,
                 repeat: -1
             });
+            this.anims.create({
+                key: 'animBaisserParticule',
+                frames: this.anims.generateFrameNumbers('anim baisser particule', {start:0,end:7}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'planerGauche',
+                frames: this.anims.generateFrameNumbers('anim planer', {start:0,end:2}),
+                frameRate: 8,
+                repeat: -1
+            });
 
 
     this.cameras.main.zoom = 2
@@ -146,17 +161,16 @@ create(){
 
     // touches spéciales clavier + manettes
     this.toucheF = this.input.keyboard.addKey('F') ||this.paddle.A;
-    
 }
 
 update(time,delta){
 
+
     super.update(time,delta);
 
-
         this.justeUp = (this.cursors.up.isDown ) 
-        this.moveUp = Phaser.Input.Keyboard.JustDown(this.keys.espace)
-        this.plane = this.keys.espace.isDown
+        this.moveUp = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+        this.plane = this.cursors.up.isDown
         this.tirer = Phaser.Input.Keyboard.JustDown(this.keys.b)
         this.moveLeft = (this.cursors.left.isDown )  
         this.moveRight = (this.cursors.right.isDown ) 
@@ -181,6 +195,8 @@ update(time,delta){
         if (this.plane){
             if (this.player.body.velocity.y > 0){
             this.player.setVelocityY(80)
+            this.player.anims.play('PlanerGauche', true)
+
             }
         }
 
@@ -349,7 +365,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: true,
+        debug: false,
         }},
         pixelArt: true,
         fps: {
