@@ -181,9 +181,15 @@ create(){
 
     this.scientifiqueGroupe = this.physics.add.group()
 
+this.i = 0;
 carte.getObjectLayer('scientifiqueLayer').objects.forEach((scientifiqueGroupe) => {
 this.scientifique = this.scientifiqueGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y - 16, 'idleScientifique');
 this.pointFaible = this.pointFaibleGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y -16,'idleScientifique');
+
+this.scientifique.health = this.i;
+this.pointFaible.health = this.i;
+this.i++
+
 this.scientifique.anims.play('animIdleScientifique',true)
 this.scientifique.setSize(21, 20);
 this.scientifique.setOffset(0, 11);
@@ -203,6 +209,7 @@ this.physics.add.collider(this.scientifiqueGroupe, plateforme);
 this.physics.add.collider(this.pointFaibleGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this)
 this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this)
+this.physics.add.collider( this.player, this.pointFaibleGroupe, this.destroyScientifique, null,this)
 
 
 
@@ -280,11 +287,11 @@ update(time,delta){
             if(this.player.direction == "left")
             this.player.anims.play('animdescendreMurDroite', true)
             this.player.body.setSize(16,30,true)
-                this.player.setOffset(4, 6)
+                this.player.setOffset(6, 6)
                 if(this.player.direction == "right")
             this.player.anims.play('animdescendreMurGauche', true)
             this.player.body.setSize(16,30,true)
-                this.player.setOffset(2, 6)
+                this.player.setOffset(0, 6)
         }
     }
 
@@ -440,16 +447,29 @@ update(time,delta){
             }
         }
      
+        this.scientifiqueGroupe.children.each(function(enemy) {
+            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+5 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 60)//check si le perso saute dessus
+            {enemy.destroy();
+                this.player.setVelocityY(-420)
+            }
+        }, this); 
+
+
+
     }
     destroyOeuf (oeuf,plateforme){
         oeuf.destroy();
     }   
 
     destroyPlayer (player,scientifiqueGroupe){
-        this.player.setTint(0xff0000);
-                this.cameras.main.shake(100, 0.01);
+
+
 
     }   
+    destroyScientifique (player,pointFaibleGroupe){
+        this.scientifique.destroy();
+    }
+
 
 };
 
