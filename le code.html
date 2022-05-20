@@ -177,39 +177,35 @@ create(){
 
 
 
-    this.pointFaibleGroupe = this.physics.add.group({allowGravity:false,})
+
 
     this.scientifiqueGroupe = this.physics.add.group()
 
-this.i = 0;
+
 carte.getObjectLayer('scientifiqueLayer').objects.forEach((scientifiqueGroupe) => {
 this.scientifique = this.scientifiqueGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y - 16, 'idleScientifique');
-this.pointFaible = this.pointFaibleGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y -16,'idleScientifique');
 
-this.scientifique.health = this.i;
-this.pointFaible.health = this.i;
-this.i++
+
+
 
 this.scientifique.anims.play('animIdleScientifique',true)
 this.scientifique.setSize(21, 20);
 this.scientifique.setOffset(0, 11);
 this.scientifique.setPushable(false);
-this.pointFaible.setSize(17, 10);
-this.pointFaible.setOffset(2, 5);
+
 
 });
 
-this.pointFaibleGroupe.setAlpha(0);
+
 
 
 
 
 
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
-this.physics.add.collider(this.pointFaibleGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this)
 this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this)
-this.physics.add.collider( this.player, this.pointFaibleGroupe, this.destroyScientifique, null,this)
+
 
 
 
@@ -451,6 +447,7 @@ update(time,delta){
             if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+5 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 60)//check si le perso saute dessus
             {enemy.destroy();
                 this.player.setVelocityY(-420)
+                this.cameras.main.shake(50, 0.01);
             }
         }, this); 
 
@@ -462,13 +459,13 @@ update(time,delta){
     }   
 
     destroyPlayer (player,scientifiqueGroupe){
-
+        this.player.setTint(0xff0000);
+        this.cameras.main.shake(100, 0.01);
+        this.scientif = this.physics.closest(this.player)
+        if (this.scientif.x < this.player.x){}
 
 
     }   
-    destroyScientifique (player,pointFaibleGroupe){
-        this.scientifique.destroy();
-    }
 
 
 };
@@ -483,7 +480,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: true,
+        debug: false,
         }},
         pixelArt: true,
         fps: {

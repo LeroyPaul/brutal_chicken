@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="13">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="18">
  <editorsettings>
   <export target="essaiTiled.json" format="json"/>
  </editorsettings>
@@ -1731,12 +1731,17 @@
 </data>
  </layer>
  <objectgroup id="3" name="scientifiqueLayer">
-  <object id="10" gid="110" x="208.061" y="1487.7" width="16" height="16"/>
+  <object id="10" gid="110" x="257.061" y="1135.7" width="16" height="16"/>
   <object id="11" gid="110" x="384.061" y="1423.82" width="16" height="16"/>
   <object id="12" gid="110" x="479.697" y="1487.82" width="16" height="16"/>
+  <object id="13" gid="110" x="1309" y="1481" width="16" height="16"/>
+  <object id="14" gid="110" x="1363" y="1470" width="16" height="16"/>
+  <object id="15" gid="110" x="1420" y="1468" width="16" height="16"/>
+  <object id="16" gid="110" x="1477" y="1467" width="16" height="16"/>
+  <object id="17" gid="110" x="1531" y="1468" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="2" name="spawnJoueur">
-  <object id="1" x="160.5" y="1430.5">
+  <object id="1" x="163.5" y="1430.5">
    <point/>
   </object>
  </objectgroup>
