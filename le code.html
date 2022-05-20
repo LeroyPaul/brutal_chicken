@@ -30,6 +30,7 @@ preload(){
     this.load.tilemapTiledJSON("carte", "essaiTiled.json");  
 
     this.load.spritesheet('perso','assets/idle poule.png',{ frameWidth: 22, frameHeight: 36 });
+    this.load.spritesheet('idleScientifique','assets/idle scientifique.png',{ frameWidth: 21, frameHeight: 32 });
 
     this.load.spritesheet('anim baisser particule','assets/baisser particule.png',{ frameWidth: 71, frameHeight: 36 });
     this.load.spritesheet('anim planer','assets/planer.png',{ frameWidth: 22, frameHeight: 36 });
@@ -148,6 +149,12 @@ create(){
                 frameRate: 8,
                 repeat: -1
             });
+            this.anims.create({
+                key: 'animIdleScientifique',
+                frames: this.anims.generateFrameNumbers('idleScientifique', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
 
 
 
@@ -166,6 +173,38 @@ create(){
     
 
     this.physics.add.collider( this.oeufG,plateforme, this.destroyOeuf, null,this);
+
+
+
+
+    this.pointFaibleGroupe = this.physics.add.group({allowGravity:false,})
+
+    this.scientifiqueGroupe = this.physics.add.group()
+
+carte.getObjectLayer('scientifiqueLayer').objects.forEach((scientifiqueGroupe) => {
+this.scientifique = this.scientifiqueGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y - 16, 'idleScientifique');
+this.pointFaible = this.pointFaibleGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y -16,'idleScientifique');
+this.scientifique.anims.play('animIdleScientifique',true)
+this.scientifique.setSize(21, 20);
+this.scientifique.setOffset(0, 11);
+this.scientifique.setPushable(false);
+this.pointFaible.setSize(17, 10);
+this.pointFaible.setOffset(2, 5);
+
+});
+
+this.pointFaibleGroupe.setAlpha(0);
+
+
+
+
+
+this.physics.add.collider(this.scientifiqueGroupe, plateforme);
+this.physics.add.collider(this.pointFaibleGroupe, plateforme);
+this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this)
+this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this)
+
+
 
 
     ///////////////////////////////////////////////////////////////
@@ -405,6 +444,13 @@ update(time,delta){
     destroyOeuf (oeuf,plateforme){
         oeuf.destroy();
     }   
+
+    destroyPlayer (player,scientifiqueGroupe){
+        this.player.setTint(0xff0000);
+                this.cameras.main.shake(100, 0.01);
+
+    }   
+
 };
 
 
