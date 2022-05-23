@@ -35,6 +35,12 @@ preload(){
     this.load.spritesheet('anim baisser particule','assets/baisser particule.png',{ frameWidth: 71, frameHeight: 36 });
     this.load.spritesheet('anim planer','assets/planer.png',{ frameWidth: 22, frameHeight: 36 });
     this.load.spritesheet('anim descendre','assets/descendre mur.png',{ frameWidth: 16, frameHeight: 36 });
+    this.load.spritesheet('tapis roulant milieu','assets/tapis roulant slot plat.png',{ frameWidth: 16, frameHeight: 16 });
+
+    
+    this.load.image("invisible", "assets/invisible.png");
+
+
 
 }
 
@@ -155,11 +161,16 @@ create(){
                 frameRate: 8,
                 repeat: -1
             });
+            this.anims.create({
+                key: 'animTapisRoulantMilieu',
+                frames: this.anims.generateFrameNumbers('tapis roulant milieu', {start:0,end:3}),
+                frameRate: 8,
+                repeat: -1
+            });
 
 
 
     this.cameras.main.zoom = 2
-    this.cameras.main.startFollow(this.player); 
     this.physics.world.setBounds(0, 0, 6400, 2880);
     this.cameras.main.setBounds(0, 0, 6400, 2880);
     
@@ -194,6 +205,24 @@ this.scientifique.setOffset(0, 11);
 this.scientifique.setPushable(false);
 
 
+
+});
+
+
+
+//camera déclaration
+
+carte.getObjectLayer('camera1').objects.forEach((camera1) => {
+this.camera1 = this.physics.add.image(camera1.x , camera1.y , 'invisible')
+this.camera1.body.setAllowGravity(false)
+});
+carte.getObjectLayer('camera2').objects.forEach((camera2) => {
+this.camera2 = this.physics.add.image(camera2.x , camera2.y , 'invisible')
+this.camera2.body.setAllowGravity(false)
+});
+carte.getObjectLayer('camera3').objects.forEach((camera3) => {
+this.camera3 = this.physics.add.image(camera3.x , camera3.y , 'invisible')
+this.camera3.body.setAllowGravity(false)
 });
 
 
@@ -201,6 +230,12 @@ this.scientifique.setPushable(false);
 
 
 
+//    this.tapisRoulantGroupe = this.physics.add.group()
+
+//carte.getObjectLayer('tapisRoulantMilieu').objects.forEach((tapisRoulantGroupe) => {
+//this.tapisRoulantGroupe = this.physics.create(tapisRoulantGroupe.x , tapisRoulantGroupe.y , 'tapis roulant milieu')
+
+//});
 
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this)
@@ -226,6 +261,21 @@ this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPla
 }
 
 update(time,delta){
+//camera
+//+ 478
+    if (this.player.x < 510){
+        this.cameras.main.startFollow(this.camera1); 
+        this.camera1.y = this.player.y
+    }
+    if (this.player.x > 510 && this.player.x < 988){
+        this.cameras.main.startFollow(this.camera2);
+        this.camera2.y = this.player.y 
+    }
+    if (this.player.x > 988 && this.player.x < 1466){
+        this.cameras.main.startFollow(this.camera3);
+        this.camera3.y = this.player.y 
+    }
+
 
 
     super.update(time,delta);
@@ -283,7 +333,7 @@ update(time,delta){
             if(this.player.direction == "left")
             this.player.anims.play('animdescendreMurDroite', true)
             this.player.body.setSize(16,30,true)
-                this.player.setOffset(6, 6)
+                this.player.setOffset(6, 0)
                 if(this.player.direction == "right")
             this.player.anims.play('animdescendreMurGauche', true)
             this.player.body.setSize(16,30,true)
