@@ -178,6 +178,7 @@ create(){
     this.saut = 0
     this.player.direction = "right"
     this.baisse = false;
+    this.bouge = false
 
     this.oeufG = this.physics.add.group()
 
@@ -230,13 +231,18 @@ this.camera3.body.setAllowGravity(false)
 
 
 
-//    this.tapisRoulantGroupe = this.physics.add.group()
+this.tapisRoulantGroupe = this.physics.add.group()
 
-//carte.getObjectLayer('tapisRoulantMilieu').objects.forEach((tapisRoulantGroupe) => {
-//this.tapisRoulantGroupe = this.physics.create(tapisRoulantGroupe.x , tapisRoulantGroupe.y , 'tapis roulant milieu')
+carte.getObjectLayer('tapisRoulantMilieu').objects.forEach((tapisRoulantGroupe) => {
+this.tapisRoulantMilieu = this.tapisRoulantGroupe.create(tapisRoulantGroupe.x , tapisRoulantGroupe.y , 'tapis roulant milieu')
+this.tapisRoulantMilieu.anims.play('animTapisRoulantMilieu',true)
+this.tapisRoulantMilieu.body.setAllowGravity(false)
+this.tapisRoulantMilieu.setPushable(false);
 
-//});
+});
 
+
+this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapisRoulant, null,this);
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this)
 this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this)
@@ -502,6 +508,11 @@ update(time,delta){
         }, this); 
 
 
+        if(this.bouge == true){
+            this.velocity += 50
+            
+         }
+
 
     }
     destroyOeuf (oeuf,plateforme){
@@ -513,9 +524,10 @@ update(time,delta){
         this.cameras.main.shake(100, 0.01);
         this.scientif = this.physics.closest(this.player)
         if (this.scientif.x < this.player.x){}
-
-
     }   
+    tapisRoulant (player,tapisRoulantGroupe){
+        this.bouge = true;
+    }
 
 
 };
