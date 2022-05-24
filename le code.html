@@ -40,6 +40,8 @@ preload(){
     
     this.load.image("invisible", "assets/invisible.png");
     this.load.image("blocFragile", "assets/blocFragile.png");
+    this.load.image("pique", "assets/pique.png");
+    this.load.image("testFond", "assets/test fond.png");
 
 
 
@@ -257,6 +259,19 @@ this.tapisRoulantMilieu.setPushable(false);
 });
 
 
+//pique
+
+this.piqueGroupe = this.physics.add.group()
+
+carte.getObjectLayer('piqueLayer').objects.forEach((piqueGroupe) => {
+this.pique = this.piqueGroupe.create(piqueGroupe.x , piqueGroupe.y-8 , 'pique')
+this.pique.body.setAllowGravity(false)
+this.pique.setPushable(false);
+
+});
+
+
+this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapis, null,this);
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this);
@@ -520,7 +535,7 @@ update(time,delta){
 
      
         this.scientifiqueGroupe.children.each(function(enemy) {
-            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+5 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 60)//check si le perso saute dessus
+            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+6 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 60)//check si le perso saute dessus
             {enemy.destroy();
                 this.player.setVelocityY(-420)
                 this.cameras.main.shake(50, 0.01);
@@ -529,7 +544,7 @@ update(time,delta){
 
 
         this.blocFragileGroupe.children.each(function(blocFragile) {
-            if (this.player.x > blocFragile.x - 30 && this.player.x < blocFragile.x+5 && this.player.y< blocFragile.y - 30 && this.player.y> blocFragile.y - 60)//check si le perso saute dessus
+            if (this.player.x > blocFragile.x - 30 && this.player.x < blocFragile.x+6 && this.player.y< blocFragile.y - 30 && this.player.y> blocFragile.y - 60)//check si le perso saute dessus
                 {this.blocFragileBool = true
                 if (this.blocFragileBool == true){
                 this.compteur += 1
@@ -543,12 +558,20 @@ update(time,delta){
 
 
         this.tapisRoulantGroupe.children.each(function(tapis) {
-            if (this.player.x > tapis.x - 30 && this.player.x < tapis.x+5 && this.player.y< tapis.y - 30 && this.player.y> tapis.y - 60)//check si le perso saute dessus
+            if (this.player.x > tapis.x - 30 && this.player.x < tapis.x+6 && this.player.y< tapis.y - 30 && this.player.y> tapis.y - 60)//check si le perso saute dessus
             {
                 this.player.setVelocityX(this.velocity + 100)
 
             }
         }, this); 
+
+        this.piqueGroupe.children.each(function(pique) {
+            if (this.player.x > pique.x - 30 && this.player.x < pique.x+6 && this.player.y< pique.y  && this.player.y> pique.y - 30)//check si le perso saute dessus
+            {
+                this.cameras.main.shake(100, 0.01);
+            }
+        }, this); 
+
 
 
 
@@ -565,14 +588,9 @@ update(time,delta){
         if (this.scientif.x < this.player.x){}
     }   
 
-    destroyBlocFragile (player,blocFragileGroupe){
-        this.player.setTint(0xff0000);
-    }
+    destroyBlocFragile (player,blocFragileGroupe){ }
 
-    tapis (player,tapisRoulantGroupe){
-        (this.player.body.velocity.x)+=200
-
-    }
+    tapis (player,tapisRoulantGroupe){ }
 
 
 };
