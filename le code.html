@@ -67,7 +67,7 @@ create(){
     ///////////////////////////////////////////////////////////////
 
     carte.getObjectLayer('spawnJoueur').objects.forEach((spawnJoueur) => {
-        this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y, 'perso').setOrigin(0);
+        this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y-30, 'perso').setOrigin(0);
         });
 
     this.player.body.setSize(16,30,true)
@@ -443,12 +443,12 @@ update(time,delta){
             this.player.setVelocityX(this.velocity);
             if (this.player.body.blocked.down ) {
                 if (this.velocity > 0){
-                    this.velocity -=  30;
-                    if (this.velocity < 30){
+                    this.velocity -=  15;
+                    if (this.velocity < 15){
                         this. velocity = 0}}
                 if (this.velocity < 0){
-                    this.velocity +=  30;
-                    if (this.velocity > 30){
+                    this.velocity +=  15;
+                    if (this.velocity > 15){
                         this. velocity = 0}}
                         if (this.velocity == 0 && this.baisse == false){
                             if (this.player.direction == "left"){
@@ -600,7 +600,7 @@ update(time,delta){
 
 var config = {
         type: Phaser.AUTO,
-        width: 960, height: 540,
+        width: 1024, height: 576,
         physics: {
         default: 'arcade',
         arcade: {
