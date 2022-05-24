@@ -529,18 +529,27 @@ update(time,delta){
 
 
         this.blocFragileGroupe.children.each(function(blocFragile) {
-            if (this.blocFragileBool == true){
+            if (this.player.x > blocFragile.x - 30 && this.player.x < blocFragile.x+5 && this.player.y< blocFragile.y - 30 && this.player.y> blocFragile.y - 60)//check si le perso saute dessus
+                {this.blocFragileBool = true
+                if (this.blocFragileBool == true){
                 this.compteur += 1
                 if (this.compteur == 50){
                     blocFragile.destroy();
-                    
+                    this.compteur = 0
                     this.blocFragileBool = false}
                 }
-            if (this.player.x > blocFragile.x - 30 && this.player.x < blocFragile.x+5 && this.player.y< blocFragile.y - 30 && this.player.y> blocFragile.y - 60)//check si le perso saute dessus
-                {this.blocFragileBool = true
-                
                 }
         }, this); 
+
+
+        this.tapisRoulantGroupe.children.each(function(tapis) {
+            if (this.player.x > tapis.x - 30 && this.player.x < tapis.x+5 && this.player.y< tapis.y - 30 && this.player.y> tapis.y - 60)//check si le perso saute dessus
+            {
+                this.player.setVelocityX(this.velocity + 100)
+
+            }
+        }, this); 
+
 
 
 
