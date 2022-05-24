@@ -39,6 +39,7 @@ preload(){
 
     
     this.load.image("invisible", "assets/invisible.png");
+    this.load.image("blocFragile", "assets/blocFragile.png");
 
 
 
@@ -175,10 +176,12 @@ create(){
     this.cameras.main.setBounds(0, 0, 6400, 2880);
     
     this.timer = 0
+    this.compteur = 0
     this.saut = 0
     this.player.direction = "right"
     this.baisse = false;
     this.bouge = false
+    this.blocFragileBool = false
 
     this.oeufG = this.physics.add.group()
 
@@ -228,13 +231,25 @@ this.camera3.body.setAllowGravity(false)
 
 
 
+//blocFragile
 
+this.blocFragileGroupe = this.physics.add.group()
 
+carte.getObjectLayer('blocFragile').objects.forEach((blocFragileGroupe) => {
+this.blocFragile = this.blocFragileGroupe.create(blocFragileGroupe.x , blocFragileGroupe.y-8 , 'blocFragile')
+this.blocFragile.body.setAllowGravity(false)
+this.blocFragile.setPushable(false);
+
+});
+
+this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
+
+//tapis roulant
 
 this.tapisRoulantGroupe = this.physics.add.group()
 
 carte.getObjectLayer('tapisRoulantMilieu').objects.forEach((tapisRoulantGroupe) => {
-this.tapisRoulantMilieu = this.tapisRoulantGroupe.create(tapisRoulantGroupe.x , tapisRoulantGroupe.y , 'tapis roulant milieu')
+this.tapisRoulantMilieu = this.tapisRoulantGroupe.create(tapisRoulantGroupe.x , tapisRoulantGroupe.y-8 , 'tapis roulant milieu')
 this.tapisRoulantMilieu.anims.play('animTapisRoulantMilieu',true)
 this.tapisRoulantMilieu.body.setAllowGravity(false)
 this.tapisRoulantMilieu.setPushable(false);
@@ -242,10 +257,10 @@ this.tapisRoulantMilieu.setPushable(false);
 });
 
 
-this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapisRoulant, null,this);
+this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapis, null,this);
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
-this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this)
-this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this)
+this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this);
+this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this);
 
 
 
@@ -498,6 +513,11 @@ update(time,delta){
                 
             }
         }
+
+
+
+
+
      
         this.scientifiqueGroupe.children.each(function(enemy) {
             if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+5 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 60)//check si le perso saute dessus
@@ -508,10 +528,20 @@ update(time,delta){
         }, this); 
 
 
-        if(this.bouge == true){
-            this.velocity += 50
-            
-         }
+        this.blocFragileGroupe.children.each(function(blocFragile) {
+            if (this.blocFragileBool == true){
+                this.compteur += 1
+                if (this.compteur == 50){
+                    blocFragile.destroy();
+                    
+                    this.blocFragileBool = false}
+                }
+            if (this.player.x > blocFragile.x - 30 && this.player.x < blocFragile.x+5 && this.player.y< blocFragile.y - 30 && this.player.y> blocFragile.y - 60)//check si le perso saute dessus
+                {this.blocFragileBool = true
+                
+                }
+        }, this); 
+
 
 
     }
@@ -525,8 +555,14 @@ update(time,delta){
         this.scientif = this.physics.closest(this.player)
         if (this.scientif.x < this.player.x){}
     }   
-    tapisRoulant (player,tapisRoulantGroupe){
-        this.bouge = true;
+
+    destroyBlocFragile (player,blocFragileGroupe){
+        this.player.setTint(0xff0000);
+    }
+
+    tapis (player,tapisRoulantGroupe){
+        (this.player.body.velocity.x)+=200
+
     }
 
 
@@ -542,7 +578,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         fps: {
