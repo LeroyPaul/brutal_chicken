@@ -356,13 +356,11 @@ update(time,delta){
             else {//idle dans le ciel
                 if(this.player.direction == "right")
                 this.player.anims.play('animMarcheDroite', true)
-                this.player.body.setSize(16,30,true)
-                this.player.setOffset(2, 6)
+
 
                 if(this.player.direction == "left")
                 this.player.anims.play('animMarcheGauche', true)
-                this.player.body.setSize(16,30,true)
-                this.player.setOffset(2, 6)
+
             }
         }
         else {//descendre contre le mur
@@ -397,7 +395,7 @@ update(time,delta){
             this.velocity = 240
             this.player.setVelocityY(-220);
             this.timer += 1
-            if (this.timer == 10){
+            if (this.timer == 20){
             this.wallJumpGauche = false
             this.timer = 0}}
 
@@ -409,7 +407,7 @@ update(time,delta){
             this.velocity = -240
             this.player.setVelocityY(-220);
             this.timer += 1
-            if (this.timer == 10){
+            if (this.timer == 20){
             this.wallJumpDroite = false
             this.timer = 0}}
 
@@ -417,24 +415,26 @@ update(time,delta){
 
         //DEPLACEMENT HORIZONTAL
         if (this.moveLeft){ 
-            this.player.direction = 'left';
+            if (!this.player.body.blocked.left){
+            this.player.direction = 'left';}
             if (this.player.body.blocked.down){
                 this.player.anims.play('animMarcheGauche', true)
                 this.player.body.setSize(16,30,true)
                 this.player.setOffset(2, 6)}
             this.player.setVelocityX(this.velocity); 
             if (this.velocity > -200){
-                this.velocity -= 15;}
+                this.velocity -= 7.5;}
         }
         else if (this.moveRight){ 
-            this.player.direction = 'right';
+            if (!this.player.body.blocked.right){
+            this.player.direction = 'right';}
             if (this.player.body.blocked.down){
             this.player.anims.play('animMarcheDroite', true)
             this.player.body.setSize(16,30,true)
             this.player.setOffset(4, 6)}
             this.player.setVelocityX(this.velocity);
                 if (this.velocity <200){
-                this.velocity += 15;}
+                this.velocity += 7.5;}
         }
 
 
@@ -477,7 +477,7 @@ update(time,delta){
             }
         }
         if (this.moveDown && this.player.body.velocity.y<500  ){
-            (this.player.body.velocity.y)+=50;
+            (this.player.body.velocity.y)+=25;
         }
         
 
@@ -609,7 +609,7 @@ var config = {
         }},
         pixelArt: true,
         fps: {
-            target: 60,                    //bloc fps car update frame rate est selon frame rate du pc et donc changement des timings ( vitesse deplacement/tombe etc...)
+            target: 120,                    //bloc fps car update frame rate est selon frame rate du pc et donc changement des timings ( vitesse deplacement/tombe etc...)
             forceSetTimeOut: true
             },
         roundPixel: true,
