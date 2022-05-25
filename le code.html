@@ -40,8 +40,12 @@ preload(){
     
     this.load.image("invisible", "assets/invisible.png");
     this.load.image("blocFragile", "assets/blocFragile.png");
-    this.load.image("pique", "assets/pique.png");
     this.load.image("testFond", "assets/test fond.png");
+
+    this.load.image("pique", "assets/pique.png");
+    this.load.image("piqueBas", "assets/piqueBas.png");
+    this.load.image("piqueGauche", "assets/piqueGauche.png");
+    this.load.image("piqueDroite", "assets/piqueDroite.png");
 
 
 
@@ -174,8 +178,8 @@ create(){
 
 
     this.cameras.main.zoom = 2
-    this.physics.world.setBounds(0, 0, 6400, 2880);
-    this.cameras.main.setBounds(0, 0, 6400, 2880);
+    this.physics.world.setBounds(0, 0, 6400, 1600);
+    this.cameras.main.setBounds(0, 0, 6400, 1600);
     
     this.timer = 0
     this.compteur = 0
@@ -230,6 +234,10 @@ carte.getObjectLayer('camera3').objects.forEach((camera3) => {
 this.camera3 = this.physics.add.image(camera3.x , camera3.y , 'invisible')
 this.camera3.body.setAllowGravity(false)
 });
+carte.getObjectLayer('camera4').objects.forEach((camera4) => {
+this.camera4 = this.physics.add.image(camera4.x , camera4.y , 'invisible')
+this.camera4.body.setAllowGravity(false)
+});
 
 
 
@@ -266,7 +274,11 @@ carte.getObjectLayer('piqueLayer').objects.forEach((piqueGroupe) => {
 this.pique = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'pique')
 this.pique.body.setAllowGravity(false)
 this.pique.setPushable(false);
-
+});
+carte.getObjectLayer('piqueBasLayer').objects.forEach((piqueGroupe) => {
+this.piqueBas = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'piqueBas')
+this.piqueBas.body.setAllowGravity(false)
+this.piqueBas.setPushable(false);
 });
 
 
@@ -308,6 +320,15 @@ update(time,delta){
     }
     if (this.player.x > 1280 && this.player.x < 1920){
         this.cameras.main.startFollow(this.camera3);
+        if (this.camera3.y > this.player.y +100){
+            this.camera3.y -= 1
+        }
+        if (this.camera3.y < this.player.y + 20 ){
+            this.camera3.y += 1
+        }
+    }
+    if (this.player.x > 1920 && this.player.x < 2560){
+        this.cameras.main.startFollow(this.camera4);
 
     }
 
@@ -565,7 +586,7 @@ update(time,delta){
         }, this); 
 
         this.piqueGroupe.children.each(function(pique) {
-            if (this.player.x > pique.x - 30 && this.player.x < pique.x+6 && this.player.y< pique.y  && this.player.y> pique.y - 30)//check si le perso saute dessus
+            if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y  && this.player.y> pique.y - 30)//check si le perso saute dessus
             {
                 this.cameras.main.shake(100, 0.01);
             }
