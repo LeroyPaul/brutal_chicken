@@ -297,18 +297,18 @@ this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPla
 
 update(time,delta){
 //camera
-//+ 478
-    if (this.player.x < 510){
+//+ 640
+    if (this.player.x < 640){
         this.cameras.main.startFollow(this.camera1); 
 
     }
-    if (this.player.x > 510 && this.player.x < 988){
+    if (this.player.x > 640 && this.player.x < 1280){
         this.cameras.main.startFollow(this.camera2);
-        this.camera2.y = this.player.y 
+
     }
-    if (this.player.x > 988 && this.player.x < 1466){
+    if (this.player.x > 1280 && this.player.x < 1920){
         this.cameras.main.startFollow(this.camera3);
-        this.camera3.y = this.player.y 
+
     }
 
 
@@ -607,7 +607,7 @@ blocFragileGroupe.destroy();
 
 var config = {
         type: Phaser.AUTO,
-        width: 1024, height: 576,
+        width: 1280, height: 720,
         physics: {
         default: 'arcade',
         arcade: {
