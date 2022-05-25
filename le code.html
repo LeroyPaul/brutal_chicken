@@ -14,13 +14,39 @@
 </head>
 <body>
     <script type="text/javascript">
+/*
+class scene0 extends Phaser.Scene{
+    constructor(){
+    super("scene1");
+}
+preload(){
+
+}
+create(){
+    this.spawnX = 32
+    this.spawnY = 1490
+}
+update(){
+    this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY})
+}
+
+};
+
+*/
+
+
+
+
 
 class scene1 extends Phaser.Scene{
     constructor(){
     super("scene1");
 }
 
-
+/*init(data){
+    this.spawnX = data.memoireX,
+    this.spawnY = data.memoireY
+}*/
 
 preload(){
     this.load.spritesheet('anim marche','assets/frame anim.png',{ frameWidth: 22, frameHeight: 36 });
@@ -69,6 +95,8 @@ create(){
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
+
+    //this.player = this.physics.add.sprite(spawnX, spawnY, 'perso')
 
     carte.getObjectLayer('spawnJoueur').objects.forEach((spawnJoueur) => {
         this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y-30, 'perso').setOrigin(0);
@@ -306,6 +334,23 @@ this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPla
     // touches spéciales clavier + manettes
     this.toucheF = this.input.keyboard.addKey('F') ||this.paddle.A;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 update(time,delta){
 //camera
@@ -551,7 +596,8 @@ update(time,delta){
 
 
 
-
+this.memoireX = this.player.x
+this.memoireY = this.player.y
 
      
         this.scientifiqueGroupe.children.each(function(enemy) {
@@ -588,7 +634,8 @@ update(time,delta){
         this.piqueGroupe.children.each(function(pique) {
             if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y  && this.player.y> pique.y - 30)//check si le perso saute dessus
             {
-                this.cameras.main.shake(100, 0.01);
+
+    this.scene.start('scene1',{memoireX : this.memoireX , memoireY : this.memoireY})
             }
         }, this); 
 
