@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="57">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="71">
  <editorsettings>
   <export target="essaiTiled.json" format="json"/>
  </editorsettings>
@@ -1938,7 +1938,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="11" name="blocFragile"/>
+ <objectgroup id="11" name="blocFragile">
+  <object id="66" gid="133" x="240" y="1408" width="16" height="16"/>
+  <object id="67" gid="133" x="256" y="1408" width="16" height="16"/>
+  <object id="68" gid="133" x="272" y="1408" width="16" height="16"/>
+  <object id="69" gid="133" x="288" y="1408" width="16" height="16"/>
+  <object id="70" gid="133" x="304" y="1408" width="16" height="16"/>
+ </objectgroup>
  <objectgroup id="3" name="scientifiqueLayer">
   <object id="10" gid="110" x="257.061" y="1135.7" width="16" height="16"/>
   <object id="13" gid="110" x="1309" y="1481" width="16" height="16"/>
@@ -1952,15 +1958,26 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="9" name="tapisRoulantMilieu"/>
- <objectgroup id="12" name="piqueLayer"/>
+ <objectgroup id="9" name="tapisRoulantMilieu">
+  <object id="62" gid="65" x="80" y="1408" width="16" height="16"/>
+  <object id="63" gid="65" x="64" y="1408" width="16" height="16"/>
+  <object id="64" gid="65" x="96" y="1408" width="16" height="16"/>
+  <object id="65" gid="65" x="112" y="1408" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="12" name="piqueLayer">
+  <object id="57" gid="43" x="240" y="1504" width="16" height="16"/>
+  <object id="58" gid="43" x="256" y="1504" width="16" height="16"/>
+  <object id="59" gid="43" x="272" y="1504" width="16" height="16"/>
+  <object id="60" gid="43" x="288" y="1504" width="16" height="16"/>
+  <object id="61" gid="43" x="304" y="1504" width="16" height="16"/>
+ </objectgroup>
  <objectgroup id="4" name="camera1">
   <object id="18" name="camera 1" x="224" y="1392">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="5" name="camera2">
-  <object id="19" x="752" y="1344">
+  <object id="19" x="768" y="1344">
    <point/>
   </object>
  </objectgroup>

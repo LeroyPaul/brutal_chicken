@@ -200,7 +200,7 @@ create(){
 
 
 carte.getObjectLayer('scientifiqueLayer').objects.forEach((scientifiqueGroupe) => {
-this.scientifique = this.scientifiqueGroupe.create(scientifiqueGroupe.x , scientifiqueGroupe.y - 16, 'idleScientifique');
+this.scientifique = this.scientifiqueGroupe.create(scientifiqueGroupe.x  , scientifiqueGroupe.y - 16, 'idleScientifique');
 
 
 
@@ -238,20 +238,19 @@ this.camera3.body.setAllowGravity(false)
 this.blocFragileGroupe = this.physics.add.group()
 
 carte.getObjectLayer('blocFragile').objects.forEach((blocFragileGroupe) => {
-this.blocFragile = this.blocFragileGroupe.create(blocFragileGroupe.x , blocFragileGroupe.y-8 , 'blocFragile')
+this.blocFragile = this.blocFragileGroupe.create(blocFragileGroupe.x + 8 , blocFragileGroupe.y-8 , 'blocFragile')
 this.blocFragile.body.setAllowGravity(false)
 this.blocFragile.setPushable(false);
 
 });
 
-this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 
 //tapis roulant
 
 this.tapisRoulantGroupe = this.physics.add.group()
 
 carte.getObjectLayer('tapisRoulantMilieu').objects.forEach((tapisRoulantGroupe) => {
-this.tapisRoulantMilieu = this.tapisRoulantGroupe.create(tapisRoulantGroupe.x , tapisRoulantGroupe.y-8 , 'tapis roulant milieu')
+this.tapisRoulantMilieu = this.tapisRoulantGroupe.create(tapisRoulantGroupe.x+8, tapisRoulantGroupe.y-8 , 'tapis roulant milieu')
 this.tapisRoulantMilieu.anims.play('animTapisRoulantMilieu',true)
 this.tapisRoulantMilieu.body.setAllowGravity(false)
 this.tapisRoulantMilieu.setPushable(false);
@@ -264,7 +263,7 @@ this.tapisRoulantMilieu.setPushable(false);
 this.piqueGroupe = this.physics.add.group()
 
 carte.getObjectLayer('piqueLayer').objects.forEach((piqueGroupe) => {
-this.pique = this.piqueGroupe.create(piqueGroupe.x , piqueGroupe.y-8 , 'pique')
+this.pique = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'pique')
 this.pique.body.setAllowGravity(false)
 this.pique.setPushable(false);
 
@@ -543,7 +542,7 @@ update(time,delta){
         }, this); 
 
 
-        this.blocFragileGroupe.children.each(function(blocFragile) {
+/*        this.blocFragileGroupe.children.each(function(blocFragile) {
             if (this.player.x > blocFragile.x - 30 && this.player.x < blocFragile.x+6 && this.player.y< blocFragile.y - 30 && this.player.y> blocFragile.y - 60)//check si le perso saute dessus
                 {this.blocFragileBool = true
                 if (this.blocFragileBool == true){
@@ -554,7 +553,7 @@ update(time,delta){
                     this.blocFragileBool = false}
                 }
                 }
-        }, this); 
+        }, this); */
 
 
         this.tapisRoulantGroupe.children.each(function(tapis) {
@@ -588,7 +587,15 @@ update(time,delta){
         if (this.scientif.x < this.player.x){}
     }   
 
-    destroyBlocFragile (player,blocFragileGroupe){ }
+    destroyBlocFragile (player,blocFragileGroupe){
+        this.sleep = (milliseconds) =>{
+            return new Promise(resolve => setTimeout(resolve,milliseconds));}
+
+        this.sleep(500).then(() => {
+blocFragileGroupe.destroy();
+        })
+
+    }
 
     tapis (player,tapisRoulantGroupe){ }
 
