@@ -14,10 +14,10 @@
 </head>
 <body>
     <script type="text/javascript">
-/*
+
 class scene0 extends Phaser.Scene{
     constructor(){
-    super("scene1");
+    super("scene0");
 }
 preload(){
 
@@ -32,7 +32,7 @@ update(){
 
 };
 
-*/
+
 
 
 
@@ -43,10 +43,10 @@ class scene1 extends Phaser.Scene{
     super("scene1");
 }
 
-/*init(data){
+init(data){
     this.spawnX = data.memoireX,
     this.spawnY = data.memoireY
-}*/
+}
 
 preload(){
     this.load.spritesheet('anim marche','assets/frame anim.png',{ frameWidth: 22, frameHeight: 36 });
@@ -96,7 +96,7 @@ create(){
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
-    //this.player = this.physics.add.sprite(spawnX, spawnY, 'perso')
+
 
     carte.getObjectLayer('spawnJoueur').objects.forEach((spawnJoueur) => {
         this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y-30, 'perso').setOrigin(0);
@@ -233,14 +233,11 @@ create(){
 
 carte.getObjectLayer('scientifiqueLayer').objects.forEach((scientifiqueGroupe) => {
 this.scientifique = this.scientifiqueGroupe.create(scientifiqueGroupe.x  , scientifiqueGroupe.y - 16, 'idleScientifique');
-
-
-
-
 this.scientifique.anims.play('animIdleScientifique',true)
 this.scientifique.setSize(21, 20);
 this.scientifique.setOffset(0, 11);
 this.scientifique.setPushable(false);
+
 
 
 
@@ -265,6 +262,14 @@ this.camera3.body.setAllowGravity(false)
 carte.getObjectLayer('camera4').objects.forEach((camera4) => {
 this.camera4 = this.physics.add.image(camera4.x , camera4.y , 'invisible')
 this.camera4.body.setAllowGravity(false)
+});
+carte.getObjectLayer('camera5').objects.forEach((camera5) => {
+this.camera5 = this.physics.add.image(camera5.x , camera5.y , 'invisible')
+this.camera5.body.setAllowGravity(false)
+});
+carte.getObjectLayer('camera6').objects.forEach((camera6) => {
+this.camera6 = this.physics.add.image(camera6.x , camera6.y , 'invisible')
+this.camera6.body.setAllowGravity(false)
 });
 
 
@@ -307,6 +312,18 @@ carte.getObjectLayer('piqueBasLayer').objects.forEach((piqueGroupe) => {
 this.piqueBas = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'piqueBas')
 this.piqueBas.body.setAllowGravity(false)
 this.piqueBas.setPushable(false);
+});
+
+carte.getObjectLayer('piqueGaucheLayer').objects.forEach((piqueGroupe) => {
+this.piqueGauche = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'piqueGauche')
+this.piqueGauche.body.setAllowGravity(false)
+this.piqueGauche.setPushable(false);
+});
+
+carte.getObjectLayer('piqueDroiteLayer').objects.forEach((piqueGroupe) => {
+this.piqueDroite = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'piqueDroite')
+this.piqueDroite.body.setAllowGravity(false)
+this.piqueDroite.setPushable(false);
 });
 
 
@@ -356,13 +373,11 @@ update(time,delta){
 //camera
 //+ 640
     if (this.player.x < 640){
-        this.cameras.main.startFollow(this.camera1); 
+        this.cameras.main.startFollow(this.camera1);}
 
-    }
     if (this.player.x > 640 && this.player.x < 1280){
-        this.cameras.main.startFollow(this.camera2);
+        this.cameras.main.startFollow(this.camera2);}
 
-    }
     if (this.player.x > 1280 && this.player.x < 1920){
         this.cameras.main.startFollow(this.camera3);
         if (this.camera3.y > this.player.y +100){
@@ -372,10 +387,22 @@ update(time,delta){
             this.camera3.y += 1
         }
     }
-    if (this.player.x > 1920 && this.player.x < 2560){
-        this.cameras.main.startFollow(this.camera4);
+    if (this.player.x > 1920 && this.player.x < 2560 && this.player.y > 1200){
+        this.cameras.main.startFollow(this.camera4);}
 
+    if (this.player.x > 2320 && this.player.x < 2940 && this.player.y < 1200){
+        this.cameras.main.startFollow(this.camera5);
+        if (this.camera5.y > this.player.y +100){
+            this.camera5.y -= 1}
+            if (this.camera5.y < this.player.y + 20 && this.camera5.y < 1025 ){
+            this.camera5.y += 2
+        }
     }
+
+    if (this.player.x > 1600 && this.player.x < 2320 && this.player.y < 1000){
+    this.cameras.main.startFollow(this.camera6); }
+            
+    
 
 
 
@@ -596,17 +623,19 @@ update(time,delta){
 
 
 
-this.memoireX = this.player.x
-this.memoireY = this.player.y
+//this.memoireX = this.player.x
+//this.memoireY = this.player.y
 
      
         this.scientifiqueGroupe.children.each(function(enemy) {
-            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+6 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 60)//check si le perso saute dessus
+            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+8 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 50)//check si le perso saute dessus
             {enemy.destroy();
                 this.player.setVelocityY(-420)
                 this.cameras.main.shake(50, 0.01);
             }
         }, this); 
+
+
 
 
 /*        this.blocFragileGroupe.children.each(function(blocFragile) {
@@ -649,7 +678,6 @@ this.memoireY = this.player.y
     }   
 
     destroyPlayer (player,scientifiqueGroupe){
-        this.player.setTint(0xff0000);
         this.cameras.main.shake(100, 0.01);
         this.scientif = this.physics.closest(this.player)
         if (this.scientif.x < this.player.x){}
@@ -680,7 +708,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: true,
+        debug: false,
         }},
         pixelArt: true,
         fps: {
@@ -688,7 +716,7 @@ var config = {
             forceSetTimeOut: true
             },
         roundPixel: true,
-        scene: [scene1]
+        scene: [scene0,scene1]
         };
         new Phaser.Game(config);
 
