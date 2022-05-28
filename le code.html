@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 32
-    this.spawnY = 1490
+    this.spawnX = 1314
+    this.spawnY = 1375
 }
 update(){
     this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY})
@@ -96,11 +96,9 @@ create(){
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
+    this.player = this.physics.add.sprite(this.spawnX, this.spawnY, 'perso')
 
-
-    carte.getObjectLayer('spawnJoueur').objects.forEach((spawnJoueur) => {
-        this.player = this.physics.add.sprite(spawnJoueur.x, spawnJoueur.y-30, 'perso').setOrigin(0);
-        });
+  
 
     this.player.body.setSize(16,30,true)
     this.player.setOffset(2, 4)
@@ -372,12 +370,26 @@ this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPla
 update(time,delta){
 //camera
 //+ 640
+
+    
+
+
+
+
+
+
+
+    super.update(time,delta);
+
+
     if (this.player.x < 640){
-        this.cameras.main.startFollow(this.camera1);}
-
+        this.cameras.main.startFollow(this.camera1);
+        this.respawnX = 32
+        this.respawnY = 1490}
     if (this.player.x > 640 && this.player.x < 1280){
-        this.cameras.main.startFollow(this.camera2);}
-
+        this.cameras.main.startFollow(this.camera2);
+        this.respawnX = 672
+        this.respawnY = 1470}
     if (this.player.x > 1280 && this.player.x < 1920){
         this.cameras.main.startFollow(this.camera3);
         if (this.camera3.y > this.player.y +100){
@@ -386,9 +398,13 @@ update(time,delta){
         if (this.camera3.y < this.player.y + 20 ){
             this.camera3.y += 1
         }
+        this.respawnX = 1314
+        this.respawnY = 1375
     }
     if (this.player.x > 1920 && this.player.x < 2560 && this.player.y > 1200){
-        this.cameras.main.startFollow(this.camera4);}
+        this.cameras.main.startFollow(this.camera4);
+        this.respawnX = 1950
+        this.respawnY = 1495}
 
     if (this.player.x > 2320 && this.player.x < 2940 && this.player.y < 1200){
         this.cameras.main.startFollow(this.camera5);
@@ -397,17 +413,13 @@ update(time,delta){
             if (this.camera5.y < this.player.y + 20 && this.camera5.y < 1025 ){
             this.camera5.y += 2
         }
+        this.respawnX = 2423
+        this.respawnY = 1155
     }
 
     if (this.player.x > 1600 && this.player.x < 2320 && this.player.y < 1000){
     this.cameras.main.startFollow(this.camera6); }
             
-    
-
-
-
-    super.update(time,delta);
-
 
 
         this.justeUp = (this.cursors.up.isDown ) 
@@ -623,8 +635,8 @@ update(time,delta){
 
 
 
-//this.memoireX = this.player.x
-//this.memoireY = this.player.y
+this.memoireX = this.player.x
+this.memoireY = this.player.y
 
      
         this.scientifiqueGroupe.children.each(function(enemy) {
@@ -661,10 +673,10 @@ update(time,delta){
         }, this); 
 
         this.piqueGroupe.children.each(function(pique) {
-            if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y  && this.player.y> pique.y - 30)//check si le perso saute dessus
+            if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 15)//check si le perso saute dessus
             {
 
-    this.scene.start('scene1',{memoireX : this.memoireX , memoireY : this.memoireY})
+    this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
             }
         }, this); 
 
@@ -708,7 +720,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         fps: {
