@@ -208,6 +208,7 @@ create(){
     this.cameras.main.setBounds(0, 0, 6400, 1600);
     
     this.timer = 0
+
     this.compteur = 0
     this.saut = 0
     this.player.direction = "right"
@@ -423,6 +424,7 @@ update(time,delta){
 
 
         this.justeUp = (this.cursors.up.isDown ) 
+        this.isUp = (this.cursors.up.isUp ) 
         this.moveUp = Phaser.Input.Keyboard.JustDown(this.cursors.up)
         this.plane = this.cursors.up.isDown
         this.tirer = Phaser.Input.Keyboard.JustDown(this.keys.b)
@@ -437,12 +439,20 @@ update(time,delta){
         }
 
         //SAUT
-        if(this.moveUp){
+
+        if(this.isUp){
+            if (this.timerJump > 50){
+            this.player.setVelocityY(-420)}
             this.saut += 1;
+            this.player.setTint(0x000000);
+
         }
 
         if (this.moveUp && this.player.body.blocked.down ) {
-            this.player.setVelocityY(-420);}
+            this.player.setTint(0xff0000);
+            
+        this.timerJump += 1
+}
 
 
         //PLANER
