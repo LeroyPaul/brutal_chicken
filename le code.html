@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 1314
-    this.spawnY = 1375
+    this.spawnX = 1601
+    this.spawnY = 800
 }
 update(){
     this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY})
@@ -270,6 +270,10 @@ carte.getObjectLayer('camera6').objects.forEach((camera6) => {
 this.camera6 = this.physics.add.image(camera6.x , camera6.y , 'invisible')
 this.camera6.body.setAllowGravity(false)
 });
+carte.getObjectLayer('camera7').objects.forEach((camera7) => {
+this.camera7 = this.physics.add.image(camera7.x , camera7.y , 'invisible')
+this.camera7.body.setAllowGravity(false)
+});
 
 
 
@@ -391,7 +395,7 @@ update(time,delta){
         this.cameras.main.startFollow(this.camera2);
         this.respawnX = 672
         this.respawnY = 1470}
-    if (this.player.x > 1280 && this.player.x < 1920){
+    if (this.player.x > 1280 && this.player.x < 1920 && this.player.y > 1000){
         this.cameras.main.startFollow(this.camera3);
         if (this.camera3.y > this.player.y +100){
             this.camera3.y -= 1
@@ -420,6 +424,14 @@ update(time,delta){
 
     if (this.player.x > 1600 && this.player.x < 2320 && this.player.y < 1000){
     this.cameras.main.startFollow(this.camera6); }
+
+    if (this.player.x >1040  && this.player.x < 1600 && this.player.y < 1000 ){
+    this.cameras.main.startFollow(this.camera7); 
+        if (this.camera7.y > this.player.y +100){
+            this.camera7.y -= 1}
+            if (this.camera7.y < this.player.y + 20 && this.camera7.y < 750 ){
+                this.camera7.y += 2
+        }}
             
 
 
@@ -442,14 +454,15 @@ update(time,delta){
 
         if(this.isUp){
             if (this.timerJump > 50){
-            this.player.setVelocityY(-420)}
+}
             this.saut += 1;
-            this.player.setTint(0x000000);
+
 
         }
 
         if (this.moveUp && this.player.body.blocked.down ) {
-            this.player.setTint(0xff0000);
+            this.player.setVelocityY(-420)
+            //this.player.setTint(0xff0000);
             
         this.timerJump += 1
 }
@@ -650,7 +663,7 @@ this.memoireY = this.player.y
 
      
         this.scientifiqueGroupe.children.each(function(enemy) {
-            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x+8 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 50)//check si le perso saute dessus
+            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x + 20 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 40)//check si le perso saute dessus
             {enemy.destroy();
                 this.player.setVelocityY(-420)
                 this.cameras.main.shake(50, 0.01);
