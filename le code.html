@@ -62,6 +62,7 @@ preload(){
     this.load.spritesheet('anim planer','assets/planer.png',{ frameWidth: 22, frameHeight: 36 });
     this.load.spritesheet('anim descendre','assets/descendre mur.png',{ frameWidth: 16, frameHeight: 36 });
     this.load.spritesheet('tapis roulant milieu','assets/tapis roulant slot plat.png',{ frameWidth: 16, frameHeight: 16 });
+    this.load.spritesheet('transition','assets/transition.png',{ frameWidth: 1280, frameHeight: 720 });
 
     
     this.load.image("invisible", "assets/invisible.png");
@@ -197,6 +198,18 @@ create(){
             this.anims.create({
                 key: 'animTapisRoulantMilieu',
                 frames: this.anims.generateFrameNumbers('tapis roulant milieu', {start:0,end:3}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animTransitionDebut',
+                frames: this.anims.generateFrameNumbers('transition', {start:0,end:4}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'animTransitionFin',
+                frames: this.anims.generateFrameNumbers('transition', {start:4,end:9}),
                 frameRate: 8,
                 repeat: -1
             });
