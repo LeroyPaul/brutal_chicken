@@ -202,6 +202,12 @@ create(){
                 repeat: -1
             });
             this.anims.create({
+                key: 'animTapisRoulantGauche',
+                frames: this.anims.generateFrameNumbers('tapis roulant milieu', {start:3,end:0}),
+                frameRate: 8,
+                repeat: -1
+            });
+            this.anims.create({
                 key: 'animTransitionDebut',
                 frames: this.anims.generateFrameNumbers('transition', {start:0,end:4}),
                 frameRate: 8,
@@ -326,6 +332,16 @@ this.tapisRoulantMilieu.setPushable(false);
 
 });
 
+this.tapisRoulantGaucheGroupe = this.physics.add.group()
+
+carte.getObjectLayer('tapisRoulantGauche').objects.forEach((tapisRoulantGaucheGroupe) => {
+this.tapisRoulantMilieu = this.tapisRoulantGaucheGroupe.create(tapisRoulantGaucheGroupe.x+8, tapisRoulantGaucheGroupe.y-8 , 'tapis roulant milieu')
+this.tapisRoulantMilieu.anims.play('animTapisRoulantGauche',true)
+this.tapisRoulantMilieu.body.setAllowGravity(false)
+this.tapisRoulantMilieu.setPushable(false);
+
+});
+
 
 //pique
 
@@ -360,6 +376,7 @@ this.piqueDroite.setPushable(false);
 
 this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapis, null,this);
+this.physics.add.collider(this.player, this.tapisRoulantGaucheGroupe, this.tapis, null,this);
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this);
 this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this);
@@ -486,9 +503,9 @@ update(time,delta){
     this.cameras.main.startFollow(this.camera10);
     this.respawnX = 4715
     this.respawnY = 820
-    if (this.camera10.x < this.player.x){
+ 
         this.camera10.x = this.player.x
-    }
+    
     }  
 
 
@@ -618,6 +635,12 @@ update(time,delta){
                     this.velocity -= 15
                 }
             }
+            if (this.vitesseGauche == true){
+                this.player.setVelocityX(this.velocity)
+                if (this.velocity >350){
+                    this.velocity -= 15
+                }
+            }
             else{this.player.setVelocityX(this.velocity); }
             if (this.velocity > -200 ){
                 this.velocity -= 7.5;}
@@ -636,6 +659,12 @@ update(time,delta){
                     this.velocity += 15
                 }
             }
+            if (this.vitesseGauche == true){
+                this.player.setVelocityX(this.velocity)
+                if (this.velocity <50){
+                    this.velocity += 15
+                }
+            }
         else{   this.player.setVelocityX(this.velocity);}
                 if (this.velocity <200){
                 this.velocity += 7.5;}
@@ -647,6 +676,7 @@ update(time,delta){
             this.player.setVelocityX(this.velocity);
             if (this.player.body.blocked.down ) {
                 this.vitesse = false
+                this.vitesseGauche = false
                 if (this.velocity > 0){
                     this.velocity -=  15;
                     if (this.velocity < 15){
@@ -774,6 +804,21 @@ this.memoireY = this.player.y
             }
         }, this); 
 
+        this.tapisRoulantGaucheGroupe.children.each(function(tapis) {
+            if (this.player.x > tapis.x - 20 && this.player.x < tapis.x+20 && this.player.y< tapis.y  && this.player.y> tapis.y - 30)//check si le perso saute dessus
+            {
+                this.player.setVelocityX(this.velocity +150)
+                this.vitesseGauche = true
+            }
+        }, this); 
+
+
+
+
+
+
+
+
         this.piqueGroupe.children.each(function(pique) {
             if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 15)//check si le perso saute dessus
             {
@@ -821,7 +866,6 @@ blocFragileGroupe.destroy();
 
     }
 
-    tapis (player,tapisRoulantGroupe){ }
 
 
 };
@@ -836,7 +880,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         fps: {
