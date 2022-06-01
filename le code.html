@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 3270
-    this.spawnY = 500
+    this.spawnX = 32
+    this.spawnY = 1480
 }
 update(){
     this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY})
@@ -295,6 +295,10 @@ carte.getObjectLayer('camera9').objects.forEach((camera9) => {
 this.camera9 = this.physics.add.image(camera9.x , camera9.y , 'invisible')
 this.camera9.body.setAllowGravity(false)
 });
+carte.getObjectLayer('camera10').objects.forEach((camera10) => {
+this.camera10 = this.physics.add.image(camera10.x , camera10.y , 'invisible')
+this.camera10.body.setAllowGravity(false)
+});
 
 
 
@@ -333,6 +337,7 @@ carte.getObjectLayer('piqueLayer').objects.forEach((piqueGroupe) => {
 this.pique = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'pique')
 this.pique.body.setAllowGravity(false)
 this.pique.setPushable(false);
+
 });
 carte.getObjectLayer('piqueBasLayer').objects.forEach((piqueGroupe) => {
 this.piqueBas = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'piqueBas')
@@ -466,20 +471,22 @@ update(time,delta){
     this.respawnX = 1700
     this.respawnY = 150 
     if (this.player.y < 20){
-        this.player.x = 3240
-        this.player.y =455
+        this.player.x = 3205
+        this.player.y =600
     }}
 
-    if (this.player.x > 3000 && this.player.x < 4580){
+    if (this.player.x > 3000 && this.player.x < 4580 && this.player.y < 666){
     this.cameras.main.startFollow(this.camera9);
     this.respawnX = 3270
     this.respawnY = 480
     if (this.camera9.x < this.player.x){
         this.camera9.x = this.player.x
-    }
-
-}
-            
+    }}
+    if (this.player.x > 4600 && this.player.x < 5300 && this.player.y > 666){
+    this.cameras.main.startFollow(this.camera10);
+    this.respawnX = 4715
+    this.respawnY = 820
+    }  
 
 
         this.justeUp = (this.cursors.up.isDown ) 
@@ -518,6 +525,7 @@ update(time,delta){
         //PLANER
         if (!this.player.body.blocked.down) {
         if (!this.player.body.blocked.right && !this.player.body.blocked.left){
+
             if (this.plane){//plane
                     if (this.player.body.velocity.y > 0){
                     this.player.setVelocityY(80)
@@ -538,16 +546,20 @@ update(time,delta){
             }
         }
         else {//descendre contre le mur
-            if(this.player.direction == "left")
+            if(this.player.direction == "left"){
             this.player.anims.play('animdescendreMurDroite', true)
-            this.player.body.setSize(16,30,true)
-                this.player.setOffset(6, 0)
-                if(this.player.direction == "right")
-            this.player.anims.play('animdescendreMurGauche', true)
             this.player.body.setSize(16,30,true)
                 this.player.setOffset(0, 6)
         }
+                if(this.player.direction == "right"){
+            this.player.anims.play('animdescendreMurGauche', true)
+            this.player.body.setSize(16,30,true)
+                this.player.setOffset(0, 6)
+                }
+        }
+
     }
+
 
 
         //OEUF
@@ -584,6 +596,7 @@ update(time,delta){
             if (this.timer == 20){
             this.wallJumpDroite = false
             this.timer = 0}}
+            
 
         
 
@@ -594,9 +607,13 @@ update(time,delta){
             if (this.player.body.blocked.down){
                 this.player.anims.play('animMarcheGauche', true)
                 this.player.body.setSize(16,30,true)
-                this.player.setOffset(2, 6)}
-            this.player.setVelocityX(this.velocity); 
-            if (this.velocity > -200){
+                this.player.setOffset(2, 6)
+            }
+            if (this.vitesse == true){
+                this.player.setVelocityX(this.velocity+150)
+            }
+            else{this.player.setVelocityX(this.velocity); }
+            if (this.velocity > -200 ){
                 this.velocity -= 7.5;}
         }
         else if (this.moveRight){ 
@@ -605,8 +622,12 @@ update(time,delta){
             if (this.player.body.blocked.down){
             this.player.anims.play('animMarcheDroite', true)
             this.player.body.setSize(16,30,true)
-            this.player.setOffset(4, 6)}
-            this.player.setVelocityX(this.velocity);
+            this.player.setOffset(4, 6)
+        }
+        if (this.vitesse == true){
+                this.player.setVelocityX(this.velocity+150)
+            }
+        else{   this.player.setVelocityX(this.velocity);}
                 if (this.velocity <200){
                 this.velocity += 7.5;}
         }
@@ -616,6 +637,7 @@ update(time,delta){
         else{ 
             this.player.setVelocityX(this.velocity);
             if (this.player.body.blocked.down ) {
+                this.vitesse = false
                 if (this.velocity > 0){
                     this.velocity -=  15;
                     if (this.velocity < 15){
@@ -705,6 +727,7 @@ update(time,delta){
 
 
 
+
 this.memoireX = this.player.x
 this.memoireY = this.player.y
 
@@ -735,9 +758,10 @@ this.memoireY = this.player.y
 
 
         this.tapisRoulantGroupe.children.each(function(tapis) {
-            if (this.player.x > tapis.x - 30 && this.player.x < tapis.x+6 && this.player.y< tapis.y - 30 && this.player.y> tapis.y - 60)//check si le perso saute dessus
+            if (this.player.x > tapis.x - 20 && this.player.x < tapis.x+20 && this.player.y< tapis.y  && this.player.y> tapis.y - 30)//check si le perso saute dessus
             {
-                this.player.setVelocityX(this.velocity + 100)
+                this.player.setVelocityX(this.velocity +150)
+                this.vitesse = true
             }
         }, this); 
 
