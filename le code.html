@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 32
-    this.spawnY = 1480
+    this.spawnX = 4750
+    this.spawnY = 820 
 }
 update(){
     this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY})
@@ -482,10 +482,13 @@ update(time,delta){
     if (this.camera9.x < this.player.x){
         this.camera9.x = this.player.x
     }}
-    if (this.player.x > 4600 && this.player.x < 5300 && this.player.y > 666){
+    if (this.player.x > 4600 && this.player.x < 6300 && this.player.y > 666){
     this.cameras.main.startFollow(this.camera10);
     this.respawnX = 4715
     this.respawnY = 820
+    if (this.camera10.x < this.player.x){
+        this.camera10.x = this.player.x
+    }
     }  
 
 
@@ -610,7 +613,10 @@ update(time,delta){
                 this.player.setOffset(2, 6)
             }
             if (this.vitesse == true){
-                this.player.setVelocityX(this.velocity+150)
+                this.player.setVelocityX(this.velocity)
+                if (this.velocity >50){
+                    this.velocity -= 15
+                }
             }
             else{this.player.setVelocityX(this.velocity); }
             if (this.velocity > -200 ){
@@ -625,7 +631,10 @@ update(time,delta){
             this.player.setOffset(4, 6)
         }
         if (this.vitesse == true){
-                this.player.setVelocityX(this.velocity+150)
+                this.player.setVelocityX(this.velocity)
+                if (this.velocity <350){
+                    this.velocity += 15
+                }
             }
         else{   this.player.setVelocityX(this.velocity);}
                 if (this.velocity <200){
