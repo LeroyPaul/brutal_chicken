@@ -624,26 +624,24 @@ update(time,delta){
         if (this.moveLeft){ 
             if (!this.player.body.blocked.left){
             this.player.direction = 'left';}
+            if (this.vitesseGauche == true){
+                this.player.setVelocityX(this.velocity -150)
+                
+            }
+            if (this.vitesse == true){
+                this.player.setVelocityX(this.velocity + 150)
+            }
             if (this.player.body.blocked.down){
                 this.player.anims.play('animMarcheGauche', true)
                 this.player.body.setSize(16,30,true)
                 this.player.setOffset(2, 6)
             }
-            if (this.vitesse == true){
-                this.player.setVelocityX(this.velocity)
-                if (this.velocity >50){
-                    this.velocity -= 15
-                }
-            }
-            if (this.vitesseGauche == true){
-                this.player.setVelocityX(this.velocity)
-                if (this.velocity >350){
-                    this.velocity -= 15
-                }
-            }
-            else{this.player.setVelocityX(this.velocity); }
+            
+            if (this.vitesse == false && this.vitesseGauche == false){
+        this.player.setVelocityX(this.velocity)}
             if (this.velocity > -200 ){
                 this.velocity -= 7.5;}
+               
         }
         else if (this.moveRight){ 
             if (!this.player.body.blocked.right){
@@ -653,19 +651,17 @@ update(time,delta){
             this.player.body.setSize(16,30,true)
             this.player.setOffset(4, 6)
         }
-        if (this.vitesse == true){
-                this.player.setVelocityX(this.velocity)
-                if (this.velocity <350){
-                    this.velocity += 15
-                }
-            }
+        
             if (this.vitesseGauche == true){
-                this.player.setVelocityX(this.velocity)
-                if (this.velocity <50){
-                    this.velocity += 15
-                }
+                this.player.setVelocityX(this.velocity - 150)
+                
             }
-        else{   this.player.setVelocityX(this.velocity);}
+            if (this.vitesse == true){
+                this.player.setVelocityX(this.velocity + 150)
+                
+            }
+            if (this.vitesse == false && this.vitesseGauche == false){
+        this.player.setVelocityX(this.velocity)}
                 if (this.velocity <200){
                 this.velocity += 7.5;}
         }
@@ -807,7 +803,7 @@ this.memoireY = this.player.y
         this.tapisRoulantGaucheGroupe.children.each(function(tapis) {
             if (this.player.x > tapis.x - 20 && this.player.x < tapis.x+20 && this.player.y< tapis.y  && this.player.y> tapis.y - 30)//check si le perso saute dessus
             {
-                this.player.setVelocityX(this.velocity +150)
+                this.player.setVelocityX(this.velocity -150)
                 this.vitesseGauche = true
             }
         }, this); 
