@@ -75,6 +75,7 @@ preload(){
     this.load.image("piqueGauche", "assets/piqueGauche.png");
     this.load.image("piqueDroite", "assets/piqueDroite.png");
     this.load.image("boule", "assets/boule.png");
+    this.load.image("particule", "assets/particule.png");
 
 
 
@@ -416,7 +417,17 @@ this.ecran.body.allowGravity = false
 this.ecran.body.stop()
 this.ecran.setVisible(false)
 
-    
+this.spark1 = this.add.particles('particule').createEmitter({
+                        x: 0,
+                        y: 0,
+                        delay:100,
+                        lifespan: 400,
+                        speed: 100,
+                        maxParticles:50,
+                        quantity:10,
+                        scale: { start: 0, end: 1 },
+                    }); 
+
     
 
 }
@@ -451,7 +462,7 @@ update(time,delta){
 
     super.update(time,delta);
 
-
+    this.spark1.setPosition(this.player.x, this.player.y);
     if (this.player.x < 640){
         this.cameras.main.startFollow(this.camera1);
         this.respawnX = 32
