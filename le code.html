@@ -382,7 +382,7 @@ this.piqueDroite.body.setAllowGravity(false)
 this.piqueDroite.setPushable(false);
 });
 
-
+this.physics.add.collider(this.busteLazer, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.busteLazer,this.destroyPlayer, null, this);
 this.physics.add.collider(this.busteLazer, plateforme,this.destroyOeuf, null, this);
@@ -411,9 +411,12 @@ this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPla
     this.toucheF = this.input.keyboard.addKey('F') ||this.paddle.A;
 
 
+    this.ecran = this.physics.add.sprite(400,200,'transition').setScrollFactor(0)
+this.ecran.body.allowGravity = false
+this.ecran.body.stop()
+this.ecran.setVisible(false)
 
-
-    this.ecran = this.add.sprite(0,0,'transition').setScrollFactor(0).setScale(2).setDepth(10000)
+    
     
 
 }
@@ -440,7 +443,6 @@ update(time,delta){
 //+ 640
 
     
-
 
 
 
@@ -879,26 +881,34 @@ enemy.setOffset(0, 11);}
         this.piqueGroupe.children.each(function(pique) {
             if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 15)//check si le perso saute dessus
             {
-    this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+    this.mort = true
             }
         }, this); 
 
         this.piqueGroupeGauche.children.each(function(pique) {
             if (this.player.x > pique.x  && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 30)//check si le perso saute dessus
             {
-    this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+    this.mort = true
             }
         }, this); 
 
         this.piqueGroupeDroite.children.each(function(pique) {
             if (this.player.x + 5 > pique.x  && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 30)//check si le perso saute dessus
             {
-    this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+    this.mort = true
             }
         }, this); 
 
 
+if(this.mort == true){
+    this.mort = true
+    this.cameras.main.shake(100, 0.01);
 
+    this.ecran.anims.play("animTransitionDebut",true)
+    if(this.ecran.anims.currentFrame.index == 4){
+        this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})}
+    this.mort = false
+}
 
 
 
@@ -909,8 +919,11 @@ enemy.setOffset(0, 11);}
 
     destroyPlayer (player,scientifiqueGroupe){
         this.cameras.main.shake(100, 0.01);
-        this.ecran.anims.play('animTransitionDebut', true)
-        this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+        this.ecran.setVisible(true) 
+        this.ecran.anims.play("animTransitionDebut",true)
+        setTimeout(() => {
+            this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+                        }, 500);
     }   
 
     destroyBlocFragile (player,blocFragileGroupe){
