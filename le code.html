@@ -57,7 +57,7 @@ preload(){
 
     this.load.spritesheet('perso','assets/idle poule.png',{ frameWidth: 22, frameHeight: 36 });
     this.load.spritesheet('idleScientifique','assets/idle scientifique.png',{ frameWidth: 21, frameHeight: 32 });
-    this.load.spritesheet('tir','assets/tir.png',{ frameWidth: 58, frameHeight: 36 });
+    this.load.spritesheet('tir','assets/tir.png',{ frameWidth: 97, frameHeight: 36 });
 
     this.load.spritesheet('anim baisser particule','assets/baisser particule.png',{ frameWidth: 71, frameHeight: 36 });
     this.load.spritesheet('anim planer','assets/planer.png',{ frameWidth: 22, frameHeight: 36 });
@@ -224,7 +224,7 @@ create(){
             this.anims.create({
                 key: 'animTir',
                 frames: this.anims.generateFrameNumbers('tir', {start:0,end:10}),
-                frameRate: 8,
+                frameRate: 7,
                 repeat: -1
             });
 
@@ -384,6 +384,8 @@ this.piqueDroite.setPushable(false);
 
 
 this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
+this.physics.add.collider(this.player, this.busteLazer,this.destroyPlayer, null, this);
+this.physics.add.collider(this.busteLazer, plateforme,this.destroyOeuf, null, this);
 this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapis, null,this);
 this.physics.add.collider(this.player, this.tapisRoulantGaucheGroupe, this.tapis, null,this);
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
@@ -407,6 +409,13 @@ this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPla
 
     // touches spéciales clavier + manettes
     this.toucheF = this.input.keyboard.addKey('F') ||this.paddle.A;
+
+
+
+
+    this.ecran = this.add.sprite(0,0,'transition').setScrollFactor(0).setScale(2).setDepth(10000)
+    
+
 }
 
 
@@ -477,7 +486,9 @@ update(time,delta){
     }
 
     if (this.player.x > 1680 && this.player.x < 2320 && this.player.y < 1000 && this.player.y > 400)  {
-    this.cameras.main.startFollow(this.camera6); }
+    this.cameras.main.startFollow(this.camera6); 
+    this.respawnX = 2280
+        this.respawnY = 885}
 
     if (this.player.x >1040  && this.player.x < 1680 && this.player.y < 1000 ){
     this.cameras.main.startFollow(this.camera7); 
@@ -784,35 +795,44 @@ this.memoireY = this.player.y
         this.scientifiqueGroupe.children.each(function(enemy) {
             if (this.player.x < enemy.x){
             enemy.flipX = false
-            
         }
         if (this.player.x > enemy.x){
-                enemy.flipX = true}
-            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x + 20 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 40)//check si le perso saute dessus
+                enemy.flipX = true
+            }
+            
+            
+        if (Phaser.Math.Distance.BetweenPoints(this.player, enemy) < 300) {
+            enemy.anims.play('animTir', true)
+            enemy.setOrigin()
+            enemy.setSize(30,25);
+            enemy.setOffset(35,10);
+
+        }
+        else{enemy.anims.play('animIdleScientifique',true)
+enemy.setSize(21, 20);
+enemy.setOffset(0, 11);}
+            
+            if (enemy.health != 0) {
+                enemy.health++;
+            }
+
+            if ((enemy.anims.currentFrame.index == 9) && (enemy.health == 0)) {
+                
+                if(enemy.flipX == true){this.lazer = this.busteLazer.create(enemy.x+20, enemy.y, 'boule');}
+                else{this.lazer = this.busteLazer.create(enemy.x-15, enemy.y, 'boule');}
+                this.physics.moveTo(this.lazer, this.player.x, this.player.y, 250);
+                enemy.health++;
+            }
+            if (enemy.health >= 50) {
+                enemy.health = 0;
+            }
+
+            if (this.player.x > enemy.x - 30 && this.player.x < enemy.x + 30 && this.player.y< enemy.y - 30 && this.player.y> enemy.y - 40)//check si le perso saute dessus
             {enemy.destroy();
                 this.player.setVelocityY(-420)
                 this.cameras.main.shake(50, 0.01);
             }
-            
-        if (Phaser.Math.Distance.BetweenPoints(this.player, enemy) < 300) {
-            if (enemy.health == 0) {
-            enemy.health++;
-            enemy.anims.play('animTir', true)
-            enemy.setSize(21, 20);
-            enemy.setOffset(2, 15);
-        }}
-        else{enemy.anims.play('animIdleScientifique',true)}
-            
-        if (enemy.health != 0) {
-            enemy.health++;
-            if (enemy.health == 130) {
-                this.lazer = this.busteLazer.create(enemy.x, enemy.y, 'boule');
-                this.physics.moveTo(this.lazer, this.player.x, this.player.y, 250);
-            }
-            if (enemy.health >= 149.7) {
-                enemy.health = 0;
-            }
-        }
+        
         }, this);
             
  
@@ -889,8 +909,8 @@ this.memoireY = this.player.y
 
     destroyPlayer (player,scientifiqueGroupe){
         this.cameras.main.shake(100, 0.01);
-        this.scientif = this.physics.closest(this.player)
-        if (this.scientif.x < this.player.x){}
+        this.ecran.anims.play('animTransitionDebut', true)
+        this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
     }   
 
     destroyBlocFragile (player,blocFragileGroupe){
