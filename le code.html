@@ -25,9 +25,10 @@ preload(){
 create(){
     this.spawnX = 2170
     this.spawnY = 820 
+   
 }
 update(){
-    this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY})
+    this.scene.start('scene1',{memoireX : this.spawnX , memoireY : this.spawnY, })
 }
 
 };
@@ -46,6 +47,7 @@ class scene1 extends Phaser.Scene{
 init(data){
     this.spawnX = data.memoireX,
     this.spawnY = data.memoireY
+    this.vivant = data.vivant
 }
 
 preload(){
@@ -76,6 +78,8 @@ preload(){
     this.load.image("piqueDroite", "assets/piqueDroite.png");
     this.load.image("boule", "assets/boule.png");
     this.load.image("particule", "assets/particule.png");
+    this.load.image("fumee", "assets/fumee.png");
+    this.load.image("plume", "assets/plume.png");
 
 
 
@@ -243,7 +247,8 @@ create(){
     this.baisse = false;
     this.bouge = false
     this.blocFragileBool = false
-
+    this.vivant = true
+            this.life = true
     this.oeufG = this.physics.add.group()
 
     
@@ -363,29 +368,40 @@ carte.getObjectLayer('piqueLayer').objects.forEach((piqueGroupe) => {
 this.pique = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'pique')
 this.pique.body.setAllowGravity(false)
 this.pique.setPushable(false);
+this.pique.setSize(16,6,true)
+    this.pique.setOffset(0, 10)
 
 });
 carte.getObjectLayer('piqueBasLayer').objects.forEach((piqueGroupe) => {
 this.piqueBas = this.piqueGroupe.create(piqueGroupe.x+8 , piqueGroupe.y-8 , 'piqueBas')
 this.piqueBas.body.setAllowGravity(false)
 this.piqueBas.setPushable(false);
+this.piqueBas.setSize(16,6,true)
+    this.piqueBas.setOffset(0, 0)
 });
 
 carte.getObjectLayer('piqueGaucheLayer').objects.forEach((piqueGroupeGauche) => {
 this.piqueGauche = this.piqueGroupeGauche.create(piqueGroupeGauche.x+8 , piqueGroupeGauche.y-8 , 'piqueGauche')
 this.piqueGauche.body.setAllowGravity(false)
 this.piqueGauche.setPushable(false);
+this.piqueGauche.setSize(6,14,true)
+    this.piqueGauche.setOffset(0, 3)
 });
 
 carte.getObjectLayer('piqueDroiteLayer').objects.forEach((piqueGroupeDroite) => {
 this.piqueDroite = this.piqueGroupeDroite.create(piqueGroupeDroite.x+8 , piqueGroupeDroite.y-8 , 'piqueDroite')
 this.piqueDroite.body.setAllowGravity(false)
 this.piqueDroite.setPushable(false);
+this.piqueDroite.setSize(6,14,true)
+    this.piqueDroite.setOffset(10, 3)
 });
 
 this.physics.add.collider(this.busteLazer, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.busteLazer,this.destroyPlayer, null, this);
+this.physics.add.collider(this.player, this.piqueGroupe,this.destroyPlayer, null, this);
+this.physics.add.collider(this.player, this.piqueGroupeGauche,this.destroyPlayer, null, this);
+this.physics.add.collider(this.player, this.piqueGroupeDroite,this.destroyPlayer, null, this);
 this.physics.add.collider(this.busteLazer, plateforme,this.destroyOeuf, null, this);
 this.physics.add.collider(this.player, this.tapisRoulantGroupe, this.tapis, null,this);
 this.physics.add.collider(this.player, this.tapisRoulantGaucheGroupe, this.tapis, null,this);
@@ -417,19 +433,57 @@ this.ecran.body.allowGravity = false
 this.ecran.body.stop()
 this.ecran.setVisible(false)
 
+
+
 this.spark1 = this.add.particles('particule').createEmitter({
                         x: 0,
                         y: 0,
                         delay:100,
-                        lifespan: 400,
+                        lifespan: 600,
                         speed: 100,
                         maxParticles:50,
                         quantity:10,
-                        scale: { start: 0, end: 1 },
+                        scale: { start: 1, end: 0 },
+                    }); 
+this.spark2 = this.add.particles('fumee').createEmitter({
+                        x: 0,
+                        y: 0,
+                        delay:20,
+                        lifespan: {min:300,max:500},
+                        speed: 50,
+                        angle:{min: 30,max:-30},
+                        rotate:{min:-180,max:180},
+                        quantity:1,
+                        frequency:100,
+                        scale: { start: 0.5, end: 0 },
+                    }); 
+                    
+                    this.spark3 = this.add.particles('plume').createEmitter({
+                        x: 0,
+                        y: 0,
+                        delay:20,
+                        lifespan: {min:300,max:500},
+                        speed: 50,
+                        angle:{min: 30,max:-30},
+                        rotate:{min:-180,max:180},
+                        quantity:1,
+                        frequency:200,
+                        scale: { start:0.7, end: 0 },
                     }); 
 
-    
-
+                    this.spark4 = this.add.particles('fumee').createEmitter({
+                        x: 0,
+                        y: 0,
+                        delay:20,
+                        lifespan:{min:400,max:500},
+                        speed: 50,
+                        angle:{min:-80 ,max:-100},
+                        rotate:{min:-180,max:180},
+                        quantity:1,
+                        frequency:150,
+                        scale: { start: 0.5, end: 0 },
+                    }); 
+                    
 }
 
 
@@ -461,8 +515,24 @@ update(time,delta){
 
 
     super.update(time,delta);
+if (this.vivant == true){
+    this.ecran.setVisible(true) 
+        this.ecran.anims.play("animTransitionFin",true)
+  
+    if (this.ecran.anims.currentFrame.index == 5){
+        this.ecran.setVisible(false)
+        this.vivant = false
+    }}
 
+    
     this.spark1.setPosition(this.player.x, this.player.y);
+    this.spark1.active = false
+
+    this.spark2.setPosition(0, 0);
+    this.spark3.setPosition(0, 0);
+    this.spark4.setPosition(0, 0);
+
+    
     if (this.player.x < 640){
         this.cameras.main.startFollow(this.camera1);
         this.respawnX = 32
@@ -545,7 +615,7 @@ update(time,delta){
     
     }  
 
-
+if(this.life == true){
         this.justeUp = (this.cursors.up.isDown ) 
         this.isUp = (this.cursors.up.isUp ) 
         this.moveUp = Phaser.Input.Keyboard.JustDown(this.cursors.up)
@@ -586,6 +656,7 @@ update(time,delta){
             if (this.plane){//plane
                     if (this.player.body.velocity.y > 0){
                     this.player.setVelocityY(80)
+                    this.spark3.setPosition(this.player.x, this.player.y);
                     if(this.player.direction == "left")
                         this.player.anims.play('planerGauche', true)
                         if(this.player.direction == "right")
@@ -607,11 +678,13 @@ update(time,delta){
             this.player.anims.play('animdescendreMurDroite', true)
             this.player.body.setSize(16,30,true)
                 this.player.setOffset(0, 6)
+                this.spark4.setPosition(this.player.x, this.player.y+10);
         }
                 if(this.player.direction == "right"){
             this.player.anims.play('animdescendreMurGauche', true)
             this.player.body.setSize(16,30,true)
                 this.player.setOffset(0, 6)
+                this.spark4.setPosition(this.player.x, this.player.y+10);
                 }
         }
 
@@ -638,6 +711,7 @@ update(time,delta){
             this.velocity = 240
             this.player.setVelocityY(-220);
             this.timer += 1
+            
             if (this.timer == 20){
             this.wallJumpGauche = false
             this.timer = 0}}
@@ -650,6 +724,7 @@ update(time,delta){
             this.velocity = -240
             this.player.setVelocityY(-220);
             this.timer += 1
+            
             if (this.timer == 20){
             this.wallJumpDroite = false
             this.timer = 0}}
@@ -663,7 +738,8 @@ update(time,delta){
             this.player.direction = 'left';}
             if (this.vitesseGauche == true){
                 this.player.setVelocityX(this.velocity -150)
-                
+
+
             }
             if (this.vitesse == true){
                 this.player.setVelocityX(this.velocity + 150)
@@ -672,6 +748,7 @@ update(time,delta){
                 this.player.anims.play('animMarcheGauche', true)
                 this.player.body.setSize(16,30,true)
                 this.player.setOffset(2, 6)
+                this.spark2.setPosition(this.player.x, this.player.y+10);
             }
             
             if (this.vitesse == false && this.vitesseGauche == false){
@@ -687,6 +764,8 @@ update(time,delta){
             this.player.anims.play('animMarcheDroite', true)
             this.player.body.setSize(16,30,true)
             this.player.setOffset(4, 6)
+            this.spark2.setPosition(this.player.x, this.player.y+10);
+
         }
         
             if (this.vitesseGauche == true){
@@ -797,7 +876,7 @@ update(time,delta){
             }
         }
 
-
+    }
 
 
 this.memoireX = this.player.x
@@ -889,37 +968,8 @@ enemy.setOffset(0, 11);}
 
 
 
-        this.piqueGroupe.children.each(function(pique) {
-            if (this.player.x > pique.x - 24 && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 15)//check si le perso saute dessus
-            {
-    this.mort = true
-            }
-        }, this); 
+        
 
-        this.piqueGroupeGauche.children.each(function(pique) {
-            if (this.player.x > pique.x  && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 30)//check si le perso saute dessus
-            {
-    this.mort = true
-            }
-        }, this); 
-
-        this.piqueGroupeDroite.children.each(function(pique) {
-            if (this.player.x + 5 > pique.x  && this.player.x < pique.x+4 && this.player.y< pique.y && this.player.y> pique.y - 30)//check si le perso saute dessus
-            {
-    this.mort = true
-            }
-        }, this); 
-
-
-if(this.mort == true){
-    this.mort = true
-    this.cameras.main.shake(100, 0.01);
-
-    this.ecran.anims.play("animTransitionDebut",true)
-    if(this.ecran.anims.currentFrame.index == 4){
-        this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})}
-    this.mort = false
-}
 
 
 
@@ -930,11 +980,23 @@ if(this.mort == true){
 
     destroyPlayer (player,scientifiqueGroupe){
         this.cameras.main.shake(100, 0.01);
-        this.ecran.setVisible(true) 
-        this.ecran.anims.play("animTransitionDebut",true)
+        player.setTint(0xff0000)
+        this.spark1.active = true
+        this.spark1.setPosition(player.x, player.y);
+        this.life = false
+        
+        player.body.allowGravity = false
+        player.body.velocity.x=0
+        player.body.velocity.y=0
+        
         setTimeout(() => {
-            this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+            this.ecran.setVisible(true) 
+        this.ecran.anims.play("animTransitionDebut",true)
+            
                         }, 500);
+        setTimeout(() => {
+                        this.scene.start('scene1',{memoireX : this.respawnX , memoireY : this.respawnY})
+                    }, 1000);
     }   
 
     destroyBlocFragile (player,blocFragileGroupe){
