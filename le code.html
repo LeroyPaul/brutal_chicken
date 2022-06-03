@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 32
-    this.spawnY = 1480 
+    this.spawnX = 4500
+    this.spawnY = 1270 
    //32 1480
 }
 update(){
@@ -324,6 +324,10 @@ carte.getObjectLayer('camera11').objects.forEach((camera11) => {
 this.camera11 = this.physics.add.image(camera11.x , camera11.y , 'invisible')
 this.camera11.body.setAllowGravity(false)
 });
+carte.getObjectLayer('camera12').objects.forEach((camera12) => {
+this.camera12 = this.physics.add.image(camera12.x , camera12.y , 'invisible')
+this.camera12.body.setAllowGravity(false)
+});
 
 
 
@@ -400,7 +404,7 @@ this.piqueDroite.setSize(6,14,true)
     this.piqueDroite.setOffset(10, 3)
 });
 
-this.physics.add.collider(this.busteLazer, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
+this.physics.add.collider(this.busteLazer, this.blocFragileGroupe,this.destroyOeuf, null, this);
 this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.busteLazer,this.destroyPlayer, null, this);
 this.physics.add.collider(this.player, this.piqueGroupe,this.destroyPlayer, null, this);
@@ -412,6 +416,8 @@ this.physics.add.collider(this.player, this.tapisRoulantGaucheGroupe, this.tapis
 this.physics.add.collider(this.scientifiqueGroupe, plateforme);
 this.physics.add.collider( this.oeufG, this.scientifiqueGroupe, this.destroyOeuf, null,this);
 this.physics.add.collider( this.player, this.scientifiqueGroupe, this.destroyPlayer, null,this);
+this.physics.add.collider( this.scientifiqueGroupe, this.tapisRoulantGaucheGroupe,this.tapis, null,this);
+this.physics.add.collider( this.scientifiqueGroupe, this.tapisRoulantGroupe, this.tapis, null,this);
 
 
 
@@ -623,13 +629,22 @@ if (this.vivant == true){
     this.cameras.main.startFollow(this.camera11);
     this.respawnX = 4500
     this.respawnY = 1305
-    if (this.player.y > 1070 && this.player.y < 1205 ){
-            this.camera11.y = this.player.y + 30
+    if (this.player.y > 1070 && this.player.y < 1200 ){
+            this.camera11.y = this.player.y 
+        }
+        if (this.player.y < 870){
+        this.player.x = 3670
+        this.player.y =1590
+    }
+    }  
+    if (this.player.x > 3200 && this.player.x < 3800 && this.player.y > 666){
+    this.cameras.main.startFollow(this.camera12);
+    this.respawnX = 3645
+    this.respawnY = 1470
+    if (this.player.y > 1070 && this.player.y < 1200 ){
+            this.camera12.y = this.player.y 
         }
         
- 
-        
-   
     }  
 
 if(this.life == true){
@@ -910,7 +925,7 @@ this.memoireY = this.player.y
             }
             
             
-        if (Phaser.Math.Distance.BetweenPoints(this.player, enemy) < 300) {
+        if (Phaser.Math.Distance.BetweenPoints(this.player, enemy) < 400) {
             enemy.anims.play('animTir', true)
             enemy.setOrigin()
             enemy.setSize(30,25);
