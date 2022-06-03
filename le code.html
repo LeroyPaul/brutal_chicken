@@ -24,7 +24,7 @@ preload(){
 }
 create(){
     this.spawnX = 4500
-    this.spawnY = 1270 
+    this.spawnY = 1300 
    //32 1480
 }
 update(){
@@ -327,6 +327,10 @@ this.camera11.body.setAllowGravity(false)
 carte.getObjectLayer('camera12').objects.forEach((camera12) => {
 this.camera12 = this.physics.add.image(camera12.x , camera12.y , 'invisible')
 this.camera12.body.setAllowGravity(false)
+});
+carte.getObjectLayer('camera13').objects.forEach((camera13) => {
+this.camera13 = this.physics.add.image(camera13.x , camera13.y , 'invisible')
+this.camera13.body.setAllowGravity(false)
 });
 
 
@@ -633,19 +637,35 @@ if (this.vivant == true){
             this.camera11.y = this.player.y 
         }
         if (this.player.y < 870){
-        this.player.x = 3670
-        this.player.y =1590
+        this.player.x = 6255
+        this.player.y =1090
     }
     }  
     if (this.player.x > 3200 && this.player.x < 3800 && this.player.y > 666){
     this.cameras.main.startFollow(this.camera12);
     this.respawnX = 3645
     this.respawnY = 1470
-    if (this.player.y > 1070 && this.player.y < 1200 ){
-            this.camera12.y = this.player.y 
+    if (this.player.y < this.camera12.y /* && this.camera12.y > 1310*/){
+            this.camera12.y -= 1
         }
         
     }  
+
+    if (this.player.x > 5850 && this.player.x < 7200){
+    this.cameras.main.startFollow(this.camera13);
+    this.respawnX = 6300
+    this.respawnY = 1016
+    if (this.player.x <= 6920){
+            this.camera13.x = this.player.x}
+            if(this.player.y < 943 && this.player.y > 860){
+                this.camera13.y = this.player.y
+            }
+
+        //}
+        
+    }  
+
+
 
 if(this.life == true){
         this.justeUp = (this.cursors.up.isDown ) 
