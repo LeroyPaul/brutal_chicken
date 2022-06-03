@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 2170
-    this.spawnY = 820 
+    this.spawnX = 4500
+    this.spawnY = 1305 
    
 }
 update(){
@@ -320,6 +320,10 @@ carte.getObjectLayer('camera10').objects.forEach((camera10) => {
 this.camera10 = this.physics.add.image(camera10.x , camera10.y , 'invisible')
 this.camera10.body.setAllowGravity(false)
 });
+carte.getObjectLayer('camera11').objects.forEach((camera11) => {
+this.camera11 = this.physics.add.image(camera11.x , camera11.y , 'invisible')
+this.camera11.body.setAllowGravity(false)
+});
 
 
 
@@ -518,6 +522,7 @@ update(time,delta){
 if (this.vivant == true){
     this.ecran.setVisible(true) 
         this.ecran.anims.play("animTransitionFin",true)
+        
   
     if (this.ecran.anims.currentFrame.index == 5){
         this.ecran.setVisible(false)
@@ -602,7 +607,7 @@ if (this.vivant == true){
     if (this.camera9.x < this.player.x){
         this.camera9.x = this.player.x
     }}
-    if (this.player.x > 4600 && this.player.x < 6300 && this.player.y > 666){
+    if (this.player.x > 4585 && this.player.x < 6300 && this.player.y > 666){
     this.cameras.main.startFollow(this.camera10);
     this.respawnX = 4715
     this.respawnY = 820
@@ -613,6 +618,18 @@ if (this.vivant == true){
             this.camera10.y += 2
         }
     
+    }  
+    if (this.player.x > 3755 && this.player.x < 4585 && this.player.y > 666){
+    this.cameras.main.startFollow(this.camera11);
+    this.respawnX = 4500
+    this.respawnY = 1305
+    if (this.player.y > 1070 && this.player.y < 1205 ){
+            this.camera11.y = this.player.y + 30
+        }
+        
+ 
+        
+   
     }  
 
 if(this.life == true){
@@ -1023,7 +1040,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: true,
+        debug: false,
         }},
         pixelArt: true,
         fps: {
