@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 4500
-    this.spawnY = 1300 
+    this.spawnX = 8080
+    this.spawnY = 540 
    //32 1480
 }
 update(){
@@ -66,7 +66,7 @@ preload(){
     this.load.spritesheet('anim descendre','assets/descendre mur.png',{ frameWidth: 16, frameHeight: 36 });
     this.load.spritesheet('tapis roulant milieu','assets/tapis roulant slot plat.png',{ frameWidth: 16, frameHeight: 16 });
     this.load.spritesheet('transition','assets/transition.png',{ frameWidth: 1280, frameHeight: 720 });
-
+    this.load.spritesheet('prof','assets/prof-Sheet.png',{ frameWidth: 57, frameHeight: 88 });
     
     this.load.image("invisible", "assets/invisible.png");
     this.load.image("blocFragile", "assets/blocFragile.png");
@@ -232,12 +232,18 @@ create(){
                 frameRate: 7,
                 repeat: -1
             });
+            this.anims.create({
+                key: 'animProf',
+                frames: this.anims.generateFrameNumbers('prof', {start:0,end:5}),
+                frameRate: 8,
+                repeat: -1
+            });
 
 
 
     this.cameras.main.zoom = 2
-    this.physics.world.setBounds(0, 0, 8000, 1600);
-    this.cameras.main.setBounds(0, 0, 8000, 1600);
+    this.physics.world.setBounds(0, 0, 10000, 1600);
+    this.cameras.main.setBounds(0, 0, 10000, 1600);
     
     this.timer = 0
 
@@ -249,6 +255,7 @@ create(){
     this.blocFragileBool = false
     this.vivant = true
             this.life = true
+            this.profvivant = true
     this.oeufG = this.physics.add.group()
 
     
@@ -332,6 +339,14 @@ carte.getObjectLayer('camera13').objects.forEach((camera13) => {
 this.camera13 = this.physics.add.image(camera13.x , camera13.y , 'invisible')
 this.camera13.body.setAllowGravity(false)
 });
+carte.getObjectLayer('camera14').objects.forEach((camera14) => {
+this.camera14 = this.physics.add.image(camera14.x , camera14.y , 'invisible')
+this.camera14.body.setAllowGravity(false)
+});
+carte.getObjectLayer('camera15').objects.forEach((camera15) => {
+this.camera15 = this.physics.add.image(camera15.x , camera15.y , 'invisible')
+this.camera15.body.setAllowGravity(false)
+});
 
 
 
@@ -408,6 +423,24 @@ this.piqueDroite.setSize(6,14,true)
     this.piqueDroite.setOffset(10, 3)
 });
 
+
+
+
+this.prof = this.physics.add.sprite(8480, 560, 'prof')
+
+    this.prof.body.setSize(35,65,true)
+    this.prof.setOffset(17, 22)
+    this.prof.setPushable(false);
+    this.physics.add.collider(this.prof, plateforme);
+    this.physics.add.collider( this.player, this.prof, this.destroyPlayer, null,this);
+
+
+
+
+
+
+
+
 this.physics.add.collider(this.busteLazer, this.blocFragileGroupe,this.destroyOeuf, null, this);
 this.physics.add.collider(this.player, this.blocFragileGroupe,this.destroyBlocFragile, null, this);
 this.physics.add.collider(this.player, this.busteLazer,this.destroyPlayer, null, this);
@@ -452,17 +485,17 @@ this.ecran.setVisible(false)
 this.spark1 = this.add.particles('particule').createEmitter({
                         x: 0,
                         y: 0,
-                        delay:100,
-                        lifespan: 600,
-                        speed: 100,
-                        maxParticles:50,
+
+                        lifespan: 400,
+                        speed: 200,
+                        frequency:2000,
                         quantity:10,
-                        scale: { start: 1, end: 0 },
+                        scale: { start: 1.5, end: 0.5 },
                     }); 
 this.spark2 = this.add.particles('fumee').createEmitter({
                         x: 0,
                         y: 0,
-                        delay:20,
+
                         lifespan: {min:300,max:500},
                         speed: 50,
                         angle:{min: 30,max:-30},
@@ -475,7 +508,7 @@ this.spark2 = this.add.particles('fumee').createEmitter({
                     this.spark3 = this.add.particles('plume').createEmitter({
                         x: 0,
                         y: 0,
-                        delay:20,
+
                         lifespan: {min:300,max:500},
                         speed: 50,
                         angle:{min: 30,max:-30},
@@ -488,8 +521,8 @@ this.spark2 = this.add.particles('fumee').createEmitter({
                     this.spark4 = this.add.particles('fumee').createEmitter({
                         x: 0,
                         y: 0,
-                        delay:20,
-                        lifespan:{min:400,max:500},
+
+                        lifespan:{min:400,max:600},
                         speed: 50,
                         angle:{min:-80 ,max:-100},
                         rotate:{min:-180,max:180},
@@ -498,6 +531,10 @@ this.spark2 = this.add.particles('fumee').createEmitter({
                         scale: { start: 0.5, end: 0 },
                     }); 
                     
+
+
+                    this.player.body.setMaxSpeed(800)
+                    this.spark1.active = false
 }
 
 
@@ -524,11 +561,8 @@ update(time,delta){
     
 
 
-
-
-
-
     super.update(time,delta);
+
 if (this.vivant == true){
     this.ecran.setVisible(true) 
         this.ecran.anims.play("animTransitionFin",true)
@@ -538,10 +572,15 @@ if (this.vivant == true){
         this.ecran.setVisible(false)
         this.vivant = false
     }}
-
+if (this.profvivant == true){
+    this.prof.anims.play("animProf",true)}
     
+        
+       
+            
+
     this.spark1.setPosition(this.player.x, this.player.y);
-    this.spark1.active = false
+
 
     this.spark2.setPosition(0, 0);
     this.spark3.setPosition(0, 0);
@@ -660,11 +699,35 @@ if (this.vivant == true){
             if(this.player.y < 943 && this.player.y > 860){
                 this.camera13.y = this.player.y
             }
-
-        //}
-        
+    if (this.player.y > 1190){ 
+        this.player.x = 7638
+        this.player.y =1
+    }
     }  
 
+    if (this.player.x > 7300 && this.player.x < 7800){
+    this.cameras.main.startFollow(this.camera14);
+    this.respawnX = 6300
+    this.respawnY = 1016
+            if(this.player.y > this.camera14.y){
+                this.camera14.y = this.player.y
+            }
+            if (this.player.y > 1560){ 
+        this.player.x = 8085
+        this.player.y =1
+    }
+    }  
+    if (this.player.x > 7800 && this.player.x < 9500){
+    this.cameras.main.startFollow(this.camera15);
+    this.respawnX = 8085
+    this.respawnY = 540
+    if(this.player.y > this.camera15.y && this.player.y < 500){
+                this.camera15.y = this.player.y
+            }
+            if(this.player.x > 8046 && this.player.x < 9460){
+                this.camera15.x = this.player.x
+            }
+    }
 
 
 if(this.life == true){
@@ -936,6 +999,8 @@ this.memoireY = this.player.y
 
      
 
+
+
         this.scientifiqueGroupe.children.each(function(enemy) {
             if (this.player.x < enemy.x){
             enemy.flipX = false
@@ -1013,7 +1078,14 @@ enemy.setOffset(0, 11);}
             }
         }, this); 
 
-
+        if (this.player.x > this.prof.x - 30 && this.player.x < this.prof.x + 30 && this.player.y< this.prof.y - 50 && this.player.y> this.prof.y - 60)//check si le perso saute dessus
+            {   
+                this.player.setVelocityY(-420)
+                this.cameras.main.shake(50, 0.02);
+                this.profvivant = false
+                this.prof.destroy();
+                
+            }
 
 
 
@@ -1034,7 +1106,7 @@ enemy.setOffset(0, 11);}
         this.cameras.main.shake(100, 0.01);
         player.setTint(0xff0000)
         this.spark1.active = true
-        this.spark1.setPosition(player.x, player.y);
+
         this.life = false
         
         player.body.allowGravity = false
@@ -1075,7 +1147,7 @@ var config = {
         default: 'arcade',
         arcade: {
         gravity: {y:1000},
-        debug: false,
+        debug: true,
         }},
         pixelArt: true,
         fps: {
