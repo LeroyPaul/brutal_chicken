@@ -23,8 +23,8 @@ preload(){
 
 }
 create(){
-    this.spawnX = 32
-    this.spawnY = 1480 
+    this.spawnX = 8090
+    this.spawnY = 530 
    //32 1480
 }
 update(){
@@ -54,6 +54,7 @@ preload(){
     this.load.spritesheet('anim marche','assets/frame anim.png',{ frameWidth: 22, frameHeight: 36 });
     this.load.spritesheet('anim baisse','assets/baisser poule.png',{ frameWidth: 22, frameHeight: 36 });
     this.load.image("Phaser_tuilesdejeu", "assets/essai.png");
+    this.load.image("Phaser_tuilesdejeu2", "assets/fond essai 1.png");
 
     this.load.tilemapTiledJSON("carte", "essaiTiled.json");  
 
@@ -90,13 +91,29 @@ create(){
     // importer les TileSet 
     const tileset = carte.addTilesetImage(
             "tuileTest",
-            "Phaser_tuilesdejeu"
+            "Phaser_tuilesdejeu",
+            
             );  
+
+            const tilesetBackground = carte.addTilesetImage(
+                "fond essai 1",
+            "Phaser_tuilesdejeu2",
+                    
+                    
+                    ); 
+
+
+            const background = carte.createLayer(
+            "fond",
+            tilesetBackground
+            );
 
     const plateforme = carte.createLayer(
             "plateforme",
             tileset
             );
+
+            
 
             this.velocity = 0
 
@@ -242,8 +259,8 @@ create(){
 
 
     this.cameras.main.zoom = 2
-    this.physics.world.setBounds(0, 0, 10000, 1600);
-    this.cameras.main.setBounds(0, 0, 10000, 1600);
+    this.physics.world.setBounds(0, 0, 9600, 1600);
+    this.cameras.main.setBounds(0, 0, 9600, 1600);
     
     this.timer = 0
 
